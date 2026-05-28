@@ -8,7 +8,7 @@ const SECTIONS = [
   {
     label: "Newsroom",
     links: [
-      { href: "/investigations", label: "Investigations" },
+      { href: "/writings", label: "Writings" },
       { href: "/campaign-desk", label: "Campaign Desk" },
       { href: "/podcast", label: "Podcast" },
     ],

@@ -5,6 +5,7 @@ import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
 import { CustomCursor } from "@/components/motion/CustomCursor";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { TopTicker } from "@/components/home/TopTicker";
 import { cn } from "@/lib/cn";
 import "./globals.css";
 
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <Nav />
+        <TopTicker />
         <PageTransition>
           <main id="main">{children}</main>
         </PageTransition>

@@ -10,7 +10,7 @@ import { MagneticButton } from "@/components/motion/MagneticButton";
 import { cn } from "@/lib/cn";
 
 const NAV = [
-  { href: "/investigations", label: "Investigations" },
+  { href: "/writings", label: "Writings" },
   { href: "/campaign-desk", label: "Campaign Desk" },
   { href: "/podcast", label: "Podcast" },
   { href: "/team", label: "Team" },

@@ -1,28 +1,33 @@
 "use client";
 
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
-import type { InvestigationMeta } from "@/lib/investigations";
+import type { Writing } from "@/lib/writings";
 
-export function InvestigationCard({
+const FALLBACK_COVER =
+  "https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=2400&q=80";
+
+export function WritingCard({
   item,
   size = "md",
 }: {
-  item: InvestigationMeta;
+  item: Writing;
   size?: "sm" | "md" | "lg";
 }) {
   const reduce = useReducedMotion();
+  const cover = item.cover ?? FALLBACK_COVER;
   return (
     <motion.article
       whileHover={reduce ? undefined : { y: -4 }}
       transition={{ duration: 0.4 }}
       className="group relative"
     >
-      <Link
-        href={`/investigations/${item.slug}`}
-        data-cursor-label="Read"
+      <a
+        href={item.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cursor-label="Substack ↗"
         className="block"
       >
         <div
@@ -33,17 +38,16 @@ export function InvestigationCard({
             size === "sm" && "aspect-[5/4]",
           )}
         >
-          {/* Cover with gentle zoom on hover */}
           <motion.div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${item.cover})` }}
+            style={{ backgroundImage: `url(${cover})` }}
             whileHover={reduce ? undefined : { scale: 1.04 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/30 to-transparent" />
           <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
             <span className="rounded-full border border-white/20 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-100 backdrop-blur">
-              {item.categoryLabel}
+              Lev Remembers
             </span>
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-200">
               {item.readingTimeMin} min
@@ -58,7 +62,7 @@ export function InvestigationCard({
         </div>
 
         <div className="mt-5">
-          {item.kicker && <p className="kicker">{item.kicker}</p>}
+          <p className="kicker">Substack · {item.author}</p>
           <h3
             className={cn(
               "mt-2 font-display font-bold tracking-tight text-ink-50",
@@ -69,24 +73,23 @@ export function InvestigationCard({
               {item.title}
             </span>
           </h3>
-          <p className="mt-3 max-w-prose text-ink-300">{item.deck}</p>
+          <p className="mt-3 max-w-prose text-ink-300">{item.description}</p>
           <div className="mt-4 flex items-center justify-between">
             <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-400">
-              By {item.authors.join(", ")}
+              By {item.author}
             </p>
             <span className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-200 transition-colors group-hover:text-signal-400">
-              Read <ArrowUpRight size={14} />
+              Read on Substack <ArrowUpRight size={14} />
             </span>
           </div>
         </div>
-      </Link>
+      </a>
     </motion.article>
   );
 }
 
 function formatDate(iso: string) {
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-US", {
+  return new Date(iso).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
