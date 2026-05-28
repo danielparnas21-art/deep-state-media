@@ -29,7 +29,11 @@ type RawItem = {
   description?: string;
   pubDate?: string;
   "dc:creator"?: string;
-  enclosure?: { "@_url"?: string };
+  /**
+   * Substack uses enclosure for both cover images AND audio (live recordings,
+   * podcast episodes). We must check `@_type` before assuming it's an image.
+   */
+  enclosure?: { "@_url"?: string; "@_type"?: string };
   "content:encoded"?: string;
 };
 
@@ -90,6 +94,13 @@ function clipDek(plain: string, max = 220): string {
   return `${sliced.slice(0, lastSpace > 80 ? lastSpace : max)}…`;
 }
 
+/** Pull the first <img src="..."> URL out of post-body HTML. */
+function firstImageFromHtml(html: string): string | undefined {
+  if (!html) return undefined;
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return match?.[1];
+}
+
 function normalize(item: RawItem): Writing | null {
   const title = textify(item.title);
   const link = textify(item.link);
@@ -104,7 +115,12 @@ function normalize(item: RawItem): Writing | null {
   const descriptionRaw = textify(item.description);
   const contentRaw = textify(item["content:encoded"]);
   const dek = clipDek(stripHtml(descriptionRaw || contentRaw));
-  const cover = item.enclosure?.["@_url"];
+  // Substack enclosure points at an audio file on podcast/video posts —
+  // only use it as a cover when the MIME type is an image.
+  const encUrl = item.enclosure?.["@_url"];
+  const encType = item.enclosure?.["@_type"] ?? "";
+  const enclosureCover = encType.startsWith("image/") ? encUrl : undefined;
+  const cover = enclosureCover ?? firstImageFromHtml(contentRaw);
   const rt = readingTime(stripHtml(contentRaw || descriptionRaw));
 
   return {
