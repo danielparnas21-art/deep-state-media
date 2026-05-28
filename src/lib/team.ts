@@ -71,10 +71,9 @@ export const TEAM: TeamMember[] = [
     bio:
       "David Sugarman is a former Wall Street executive turned NBA-certified sports agent, entrepreneur, and private equity strategist whose career has crossed finance, sports, entertainment, media, and political activism. After Vice President and advisory roles at Morgan Stanley, Deutsche Bank, Merrill Lynch, UBS, and Laidlaw, he founded SugarTime Inc. — building it into a nationally recognized brand for athlete representation, celebrity management, investor relations, and strategic business advisory. Operating from Miami with roots in New York finance culture, he has become known for his aggressive dealmaking, high-profile network, and willingness to operate at the crossroads of Wall Street, sports, entertainment, and media influence.\n\nNationally, Sugarman is recognized for his humanitarian advocacy on Americans imprisoned in North Korea — launching the viral #BringBaeBack campaign supporting Kenneth Bae’s 2014 release, then becoming publicly involved in efforts surrounding Otto Warmbier in 2016, meeting with DPRK diplomats and ambassadors while leveraging media pressure tied to prisoner releases and human-rights concerns. His advocacy has been covered by NBC New York, CNN, NPR affiliates, and other national outlets.\n\nHe is also outspoken on civil liberties, parental rights, criminal-justice reform, and Second Amendment protections — including advocacy against parental alienation and government overreach, blending legal activism with media strategy and high-profile public campaigns. Supporters describe him as a visionary connector and relentless strategist; critics call him unapologetically disruptive. At Deep State Media he runs the operational backbone — funding, legal review, and the long-game machinery that keeps the editorial team independent.",
     quote: {
-      text: "For whatever reason God has blessed me with the ability to assist in prisoner releases with other people and I believe it’s my calling and destiny to do it.",
-      cite: "David Sugarman, WVXU / NPR · April 28, 2016",
-      source:
-        "https://www.wvxu.org/local-news/2016-04-28/nba-agent-works-to-free-otto-warmbier",
+      text: "This stage in my life is about making a difference. It’s not enough anymore for me to just ‘work’ without a greater purpose.",
+      cite: "David Sugarman, Xappeal · May 17, 2015",
+      source: "https://xappeal.net/the-edge/tough-love-david-sugarman/",
     },
     portrait:
       "https://npr.brightspotcdn.com/dims4/default/bfe27af/2147483647/strip/true/crop/960x1280+0+0/resize/880x1173!/quality/90/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Flegacy%2Fsites%2Fwvxu%2Ffiles%2F201604%2FSugarman5.jpg",
