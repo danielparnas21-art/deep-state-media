@@ -4,7 +4,7 @@ import { ExternalLink, Quote } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 import { Monogram } from "@/components/team/Monogram";
-import { TEAM, initialsOf } from "@/lib/team";
+import { getTeam, initialsOf } from "@/lib/team";
 
 export const metadata: Metadata = {
   title: "The Team",
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function TeamPage() {
+  const team = getTeam();
   return (
     <>
       <section className="relative border-b border-white/5 pb-20 pt-40">
@@ -34,7 +35,7 @@ export default function TeamPage() {
       <section className="py-16">
         <Container>
           <ul className="space-y-24">
-            {TEAM.map((m, i) => (
+            {team.map((m, i) => (
               <RevealOnScroll
                 key={m.slug}
                 as="li"

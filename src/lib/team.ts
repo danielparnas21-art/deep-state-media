@@ -1,3 +1,6 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
+
 export type TeamLink = { label: string; href: string };
 
 export type TeamMember = {
@@ -122,4 +125,34 @@ export function initialsOf(name: string): string {
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("");
+}
+
+const LOCAL_EXTS = ["png", "jpg", "jpeg", "webp", "avif"] as const;
+
+/**
+ * If a portrait file exists at /public/team/<slug>.<ext>, return the public
+ * URL. Lets you drop a real photo file into the repo and have the team page
+ * pick it up without a code edit. Server-side only — Next.js calls this on
+ * every render in dev, and at build time in production.
+ */
+function resolveLocalPortrait(slug: string): string | undefined {
+  const root = path.join(process.cwd(), "public", "team");
+  for (const ext of LOCAL_EXTS) {
+    if (existsSync(path.join(root, `${slug}.${ext}`))) {
+      return `/team/${slug}.${ext}`;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Returns the team list with each member's `portrait` resolved in priority
+ * order: (1) a local file at /public/team/<slug>.<ext>, (2) the URL set on
+ * the member, (3) undefined → <Monogram /> placeholder.
+ */
+export function getTeam(): TeamMember[] {
+  return TEAM.map((m) => ({
+    ...m,
+    portrait: resolveLocalPortrait(m.slug) ?? m.portrait,
+  }));
 }
