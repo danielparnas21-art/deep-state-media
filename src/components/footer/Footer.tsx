@@ -34,19 +34,19 @@ const SECTIONS = [
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative mt-32 border-t border-white/5 bg-ink-950 text-ink-100">
-      <Marquee speed={48} className="border-b border-white/5 py-6">
+    <footer className="relative mt-32 border-t border-ink-900/10 bg-paper-100 text-ink-700">
+      <Marquee speed={56} className="border-b border-ink-900/10 py-6">
         <MarqueeStrip />
       </Marquee>
 
       <Container className="grid gap-16 py-20 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
-          <Wordmark variant="stack" className="text-[clamp(2.5rem,4vw,4rem)] text-ink-50" />
-          <p className="mt-6 max-w-md text-pretty text-ink-300">
+          <Wordmark variant="stack" className="text-[clamp(2.25rem,3.6vw,3.5rem)] text-ink-900" />
+          <p className="mt-6 max-w-md text-pretty text-ink-500">
             Independent investigative journalism on the people who actually run
             things. Bold framing. Sourced facts. No team jersey.
           </p>
-          <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-400">
+          <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-navy-600">
             Signal &gt; Noise. Evidence &gt; Allegiance.
           </p>
 
@@ -64,9 +64,9 @@ export function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="group inline-flex items-center gap-2 text-lg text-ink-100 transition-colors hover:text-signal-300"
+                    className="group inline-flex items-center gap-2 text-lg text-ink-700 transition-colors hover:text-navy-600"
                   >
-                    <span className="h-px w-3 bg-white/30 transition-all duration-500 ease-out group-hover:w-8 group-hover:bg-signal-500" />
+                    <span className="h-px w-3 bg-ink-900/25 transition-all duration-500 ease-out group-hover:w-8 group-hover:bg-navy-600" />
                     {l.label}
                   </Link>
                 </li>
@@ -76,13 +76,13 @@ export function Footer() {
         ))}
       </Container>
 
-      <div className="border-t border-white/5">
+      <div className="border-t border-ink-900/10">
         <Container className="flex flex-col items-start justify-between gap-4 py-6 text-xs text-ink-400 md:flex-row md:items-center">
           <p>
-            © {year} Deep State Media, Inc. — Reader-supported. No corporate
-            ownership. No party affiliation.
+            © {year} Deep State Media, Inc. — Independently owned. No corporate
+            parent. No party affiliation.
           </p>
-          <p className="font-mono uppercase tracking-[0.22em]">
+          <p className="font-semibold uppercase tracking-[0.2em]">
             Built independent. Built in public.
           </p>
         </Container>
@@ -105,7 +105,7 @@ function MarqueeStrip() {
       {items.map((t) => (
         <span
           key={t}
-          className="inline-flex items-center gap-6 font-display text-2xl font-bold uppercase tracking-tightest text-ink-100"
+          className="inline-flex items-center gap-6 font-display text-2xl font-semibold text-ink-900"
         >
           {t}
           <span aria-hidden className="inline-block h-2 w-2 rotate-45 bg-signal-500" />

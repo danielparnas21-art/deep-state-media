@@ -39,7 +39,7 @@ export const TEAM: TeamMember[] = [
   {
     slug: "lev-parnas",
     name: "Lev Parnas",
-    role: "Founder · Central figure",
+    role: "CEO",
     roleSub: "2026 Florida 27 congressional candidate · Author, Lev Remembers",
     bio:
       "Lev Parnas was born in Odessa in 1972, emigrated from the Soviet Union with his family in 1976, and spent the next four decades in South Florida business and politics — until 2019, when his back-channel work with Rudy Giuliani to pressure Ukraine became the central thread of Donald Trump’s first impeachment. He was convicted in October 2021 on six federal counts and sentenced to 20 months in 2022. Since then he has been one of the most prolific public witnesses against the political machine he was once inside: he testified before House Oversight in March 2024 that the Biden-Ukraine corruption narrative was “false” and Kremlin-spread, published his memoir Shadow Diplomacy that same month, and writes the long-running Lev Remembers Substack column (84,000+ subscribers, top-15 in World Politics). On March 4, 2026, he announced his run as a Democrat for Florida’s 27th congressional district. He is, on the record, every step of the way.",
@@ -92,8 +92,7 @@ export const TEAM: TeamMember[] = [
   {
     slug: "daniel-parnas",
     name: "Daniel Parnas",
-    role: "Co-founder · Social strategy",
-    roleSub: "Audience, distribution, the feed",
+    role: "Co-founder · Social & Growth",
     bio:
       "Daniel Parnas is Lev Parnas’s son and a co-founder of Deep State Media. He grew up inside the kind of rooms most reporters only read transcripts of. From a young age he was at his father’s side, sitting in on meetings with oligarchs, sitting members of Congress, donors, defectors, and business operators most of the public will never see in a press release. He has seen every side of it — the people who run things, the people the powerful step on, and the spaces in between most newsrooms never get a look at.\n\nAt Deep State Media he leads social strategy and audience-building, and uses that platform to talk directly to a generation of young men who deserve a better script than the one currently being sold to them online. He’s unapologetically pro-ambition, pro-success, and absolutely uncompromising on the protection of women and children. The newsroom does the reporting; Daniel makes sure people see it.",
     quote: {
@@ -107,7 +106,7 @@ export const TEAM: TeamMember[] = [
   {
     slug: "jonathan-hay",
     name: "Jonathan Hay",
-    role: "Contributing reporter",
+    role: "Publicist · Contributing reporter",
     roleSub: "Celebrity publicist · Music producer · Crisis-media strategist · Survivor advocate",
     bio:
       "Jonathan Hay is a renowned celebrity publicist and music producer who has reshaped the entertainment industry with two decades of innovative publicity campaigns — 20+ years on the inside, 1,000+ media placements, 100+ high-profile clients. His work spans iconic names: he wrote Rihanna’s first press release for “Pon de Replay” and orchestrated the publicity stunt that helped vault her to worldwide attention, promoted Whitney Houston’s $100M Arista recording contract and her #1 final album “I Look to You,” and collaborated with multi-platinum post-grunge band Days of the New on “Touch, Peel and Stand,” which topped modern rock charts for 17 weeks and was later named Billboard’s Greatest of All-Time Mainstream Rock Song.\n\nHay is recognized by The New York Times, Fox News, Marie Claire, Rolling Stone, and Billboard as a crisis-media expert. He specializes in elevating celebrities and public figures through strategic media placements, elite brand partnerships, and access to top-tier financial media — and in protecting their reputations when the story turns against them.\n\nIn October 2025 he publicly came forward as the John Doe plaintiff in a sexual-assault lawsuit against Sean “Diddy” Combs — using his name, in his words, “to push for criminal charges” and to give other survivors a voice. He brings that lens — the music industry, abuse of power, the long road to accountability, and the institutions that protect predators — to Deep State Media’s reporting.",

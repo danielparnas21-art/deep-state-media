@@ -21,28 +21,25 @@ export default async function WritingsPage() {
   const items = await listWritings();
   return (
     <>
-      <section className="relative border-b border-white/5 pb-20 pt-40">
+      <section className="relative border-b border-ink-900/10 bg-paper-100 pb-20 pt-40">
         <Container>
-          <p className="kicker mb-6 flex items-center gap-3">
-            <span className="relative inline-flex h-1.5 w-1.5">
-              <span className="absolute inset-0 animate-pulse-dot rounded-full bg-signal-500" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-400" />
-            </span>
+          <p className="kicker mb-6 flex items-center gap-2.5">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />
             The Column — Lev Remembers
           </p>
-          <h1 className="display-stencil text-title text-ink-50">
+          <h1 className="display-stencil text-title text-ink-900">
             Notes from
             <br />
-            <span className="text-signal-500">{SUBSTACK_AUTHOR}.</span>
+            <span className="italic text-navy-600">{SUBSTACK_AUTHOR}.</span>
           </h1>
-          <p className="mt-8 max-w-2xl text-deck text-ink-200">
+          <p className="mt-8 max-w-2xl text-deck text-ink-600">
             Author, public speaker, political activist, truth teller. Lev’s
             personal column — published live on{" "}
             <a
               href={SUBSTACK_HOME}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-signal-300 underline underline-offset-4 hover:text-signal-200"
+              className="text-navy-600 underline underline-offset-4 hover:text-navy-700"
             >
               {SUBSTACK_TITLE}
             </a>
@@ -54,7 +51,7 @@ export default async function WritingsPage() {
               href={SUBSTACK_HOME}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-3 rounded-full bg-signal-500 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-black transition-transform hover:translate-x-0.5"
+              className="group inline-flex items-center gap-3 rounded-full bg-signal-500 px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-signal-600"
             >
               Subscribe on Substack
               <ExternalLink size={14} />
@@ -63,7 +60,7 @@ export default async function WritingsPage() {
               href={`${SUBSTACK_HOME}/feed`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-100 transition-colors hover:border-signal-500/60 hover:text-signal-300"
+              className="inline-flex items-center gap-2 rounded-full border border-ink-900/20 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-700 transition-colors hover:border-navy-600 hover:text-navy-600"
             >
               RSS
             </a>
@@ -76,16 +73,16 @@ export default async function WritingsPage() {
           {items.length > 0 ? (
             <WritingsIndex items={items} />
           ) : (
-            <div className="rounded-md border border-dashed border-white/15 p-16 text-center">
+            <div className="rounded-md border border-dashed border-ink-900/20 p-16 text-center">
               <p className="kicker mb-4">Feed currently unavailable</p>
-              <p className="max-w-prose text-ink-200">
+              <p className="max-w-prose text-ink-600">
                 We couldn&rsquo;t reach the Substack feed just now. Read the
                 column directly at{" "}
                 <a
                   href={SUBSTACK_HOME}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-signal-300 underline underline-offset-4"
+                  className="text-navy-600 underline underline-offset-4"
                 >
                   {SUBSTACK_TITLE}
                 </a>

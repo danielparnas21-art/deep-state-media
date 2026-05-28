@@ -106,7 +106,7 @@ export function AudioPlayer({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-md border border-white/10 bg-ink-900/60 p-5 backdrop-blur",
+        "relative overflow-hidden rounded-md border border-white/10 bg-navy-950/60 p-5 backdrop-blur",
         className,
       )}
     >
@@ -142,13 +142,13 @@ export function AudioPlayer({
           style={{ width: `${pct}%` }}
         />
         <motion.div
-          className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-signal-500 shadow-[0_0_12px_rgba(255,45,45,0.6)]"
+          className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-signal-500 shadow-[0_0_12px_rgba(200,57,42,0.6)]"
           style={{ left: `${pct}%` }}
           aria-hidden
         />
       </div>
 
-      <div className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em] text-ink-300">
+      <div className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em] text-navy-200">
         <span className="tabular-nums">{formatDuration(Math.floor(current))}</span>
         <span className="tabular-nums">{formatDuration(Math.floor(duration))}</span>
       </div>
@@ -159,7 +159,7 @@ export function AudioPlayer({
             type="button"
             onClick={() => skip(-15)}
             aria-label="Back 15 seconds"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-ink-100 hover:border-white/30"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-paper hover:border-white/30"
           >
             <SkipBack size={14} />
           </button>
@@ -167,10 +167,10 @@ export function AudioPlayer({
             type="button"
             onClick={toggle}
             aria-label={playing ? "Pause" : "Play"}
-            className="group relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-signal-500 text-black transition-transform hover:scale-105"
+            className="group relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-signal-500 text-white transition-transform hover:scale-105"
           >
             {loading ? (
-              <span className="h-3 w-3 animate-spin rounded-full border-2 border-black/40 border-t-black" />
+              <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/40 border-t-white" />
             ) : playing ? (
               <Pause size={16} fill="currentColor" />
             ) : (
@@ -181,7 +181,7 @@ export function AudioPlayer({
             type="button"
             onClick={() => skip(15)}
             aria-label="Forward 15 seconds"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-ink-100 hover:border-white/30"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-paper hover:border-white/30"
           >
             <SkipForward size={14} />
           </button>
@@ -192,7 +192,7 @@ export function AudioPlayer({
             type="button"
             onClick={cycleSpeed}
             aria-label="Playback speed"
-            className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-100 hover:border-signal-500/60 hover:text-signal-300"
+            className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper hover:border-signal-500/60 hover:text-signal-400"
           >
             {speed}×
           </button>
@@ -200,7 +200,7 @@ export function AudioPlayer({
             type="button"
             onClick={toggleMute}
             aria-label={muted ? "Unmute" : "Mute"}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-ink-100 hover:border-white/30"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-paper hover:border-white/30"
           >
             {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>

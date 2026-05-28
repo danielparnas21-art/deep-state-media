@@ -1,25 +1,45 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Fraunces, Newsreader, Inter, JetBrains_Mono, Anton } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Nav } from "@/components/nav/Nav";
 import { Footer } from "@/components/footer/Footer";
-import { CustomCursor } from "@/components/motion/CustomCursor";
+import { V1Nav } from "@/components/nav/V1Nav";
+import { V1Footer } from "@/components/footer/V1Footer";
+import { CodeRain } from "@/components/home/CodeRain";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { TopTicker } from "@/components/home/TopTicker";
+import { IntroGate } from "@/components/intro/IntroGate";
+import { LAUNCHED } from "@/lib/launch";
 import { cn } from "@/lib/cn";
 import "./globals.css";
 
-const display = Space_Grotesk({
+const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["500", "700"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  display: "swap",
+});
+
+const poster = Anton({
+  subsets: ["latin"],
+  variable: "--font-poster",
+  weight: "400",
+  display: "swap",
+});
+
+const serif = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
 const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -31,7 +51,7 @@ const mono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#06070A",
+  themeColor: "#FBFAF6",
   width: "device-width",
   initialScale: 1,
 };
@@ -65,23 +85,32 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={cn(display.variable, sans.variable, mono.variable)}
+      className={cn(display.variable, poster.variable, serif.variable, sans.variable, mono.variable)}
+      style={LAUNCHED ? undefined : { background: "#06070d", colorScheme: "dark" }}
       suppressHydrationWarning
     >
-      <body className="bg-ink-950 text-ink-50 font-sans antialiased">
-        <CustomCursor />
+      <body
+        className={cn(
+          "font-sans antialiased",
+          LAUNCHED ? "bg-paper text-ink-900" : "bg-[#06070d] text-paper",
+        )}
+      >
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-signal-500 focus:px-3 focus:py-2 focus:text-black"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-navy-600 focus:px-3 focus:py-2 focus:text-white"
         >
           Skip to content
         </a>
-        <Nav />
-        <TopTicker />
+        {LAUNCHED ? <Nav /> : <V1Nav />}
+        {LAUNCHED && <TopTicker />}
+        {!LAUNCHED && <CodeRain />}
         <PageTransition>
-          <main id="main">{children}</main>
+          <main id="main" className="relative z-10">
+            {children}
+          </main>
         </PageTransition>
-        <Footer />
+        {LAUNCHED ? <Footer /> : <V1Footer />}
+        <IntroGate />
         <Analytics />
       </body>
     </html>

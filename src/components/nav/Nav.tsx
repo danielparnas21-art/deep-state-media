@@ -34,7 +34,6 @@ export function Nav() {
     setOpen(false);
   }, [pathname]);
 
-  // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -45,10 +44,10 @@ export function Nav() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-500",
+        "fixed inset-x-0 top-0 z-50 border-b border-ink-900/10 backdrop-blur-xl transition-[background-color,box-shadow] duration-500",
         scrolled
-          ? "border-b border-white/5 bg-ink-950/70 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent",
+          ? "bg-paper/95 shadow-[0_1px_24px_-12px_rgba(20,18,14,0.35)]"
+          : "bg-paper/90",
       )}
     >
       <div className="mx-auto flex h-16 max-w-[1480px] items-center justify-between px-6 sm:px-8 lg:px-12">
@@ -57,16 +56,16 @@ export function Nav() {
           aria-label="Deep State Media — Home"
           className="group relative inline-flex items-center"
         >
-          <Wordmark variant="inline" className="text-ink-50" />
+          <Wordmark variant="inline" className="text-ink-900" />
           <motion.span
             aria-hidden
             initial={false}
-            animate={{ width: scrolled ? 0 : 28 }}
+            animate={{ width: scrolled ? 0 : 26 }}
             transition={{ duration: 0.4 }}
-            className="ml-3 hidden h-px bg-white/30 md:block"
+            className="ml-3 hidden h-px bg-ink-900/20 md:block"
           />
-          <span className="ml-3 hidden font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300 md:inline">
-            EST. 2026 — Independent
+          <span className="ml-3 hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-400 md:inline">
+            Est. 2026 — Independent
           </span>
         </Link>
 
@@ -81,15 +80,15 @@ export function Nav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "group relative font-mono text-[11px] uppercase tracking-[0.22em] transition-colors",
-                  active ? "text-ink-50" : "text-ink-300 hover:text-ink-50",
+                  "group relative text-[12px] font-semibold uppercase tracking-[0.16em] transition-colors",
+                  active ? "text-ink-900" : "text-ink-500 hover:text-ink-900",
                 )}
               >
                 {item.label}
                 <span
                   aria-hidden
                   className={cn(
-                    "absolute -bottom-1.5 left-0 h-px w-full origin-left scale-x-0 bg-signal-500 transition-transform duration-500 ease-out group-hover:scale-x-100",
+                    "absolute -bottom-1.5 left-0 h-0.5 w-full origin-left scale-x-0 bg-navy-600 transition-transform duration-500 ease-out group-hover:scale-x-100",
                     active && "scale-x-100",
                   )}
                 />
@@ -102,13 +101,8 @@ export function Nav() {
           <MagneticButton
             as="a"
             href="/tip"
-            data-cursor-label="Securely"
-            className="group hidden items-center gap-2 rounded-full border border-signal-500/60 bg-signal-500/10 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-100 transition-colors hover:bg-signal-500 hover:text-black md:inline-flex"
+            className="group hidden items-center gap-2 rounded-full bg-signal-500 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-signal-600 md:inline-flex"
           >
-            <span className="relative inline-flex h-1.5 w-1.5">
-              <span className="absolute inset-0 animate-pulse-dot rounded-full bg-signal-500" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-300" />
-            </span>
             Send a Tip
           </MagneticButton>
           <button
@@ -116,7 +110,7 @@ export function Nav() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-ink-50 md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink-900/15 text-ink-900 md:hidden"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -133,7 +127,7 @@ export function Nav() {
             transition={{ duration: reduce ? 0 : 0.3 }}
             className="md:hidden"
           >
-            <div className="border-t border-white/5 bg-ink-950/95 backdrop-blur-xl">
+            <div className="border-t border-ink-900/10 bg-paper/97 backdrop-blur-xl">
               <ul className="flex flex-col px-6 py-6">
                 {NAV.map((item, i) => (
                   <motion.li
@@ -141,11 +135,11 @@ export function Nav() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: reduce ? 0 : i * 0.04 }}
-                    className="border-b border-white/5 last:border-b-0"
+                    className="border-b border-ink-900/10 last:border-b-0"
                   >
                     <Link
                       href={item.href}
-                      className="block py-5 font-display text-3xl font-bold tracking-tightest text-ink-50"
+                      className="block py-5 font-display text-3xl font-semibold tracking-tight text-ink-900"
                     >
                       {item.label}
                     </Link>
@@ -154,12 +148,8 @@ export function Nav() {
                 <li className="pt-6">
                   <Link
                     href="/tip"
-                    className="inline-flex items-center gap-2 rounded-full bg-signal-500 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-black"
+                    className="inline-flex items-center gap-2 rounded-full bg-signal-500 px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-white"
                   >
-                    <span className="relative inline-flex h-1.5 w-1.5">
-                      <span className="absolute inset-0 animate-pulse-dot rounded-full bg-black/70" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-black" />
-                    </span>
                     Send a Tip
                   </Link>
                 </li>

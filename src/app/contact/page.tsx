@@ -35,7 +35,7 @@ const CHANNELS = [
     Icon: Briefcase,
     label: "Business & partnerships",
     head: "ops@deepstate.media",
-    body: "Reader-funding partnerships, syndication, hiring.",
+    body: "Advertising, partnerships, syndication, hiring.",
     cta: { label: "Email operations", href: "mailto:ops@deepstate.media" },
   },
 ];
@@ -43,15 +43,15 @@ const CHANNELS = [
 export default function ContactPage() {
   return (
     <>
-      <section className="relative border-b border-white/5 pb-20 pt-40">
+      <section className="relative border-b border-ink-900/10 bg-paper-100 pb-20 pt-40">
         <Container>
           <p className="kicker mb-6">The Doorway</p>
-          <h1 className="display-stencil text-hero text-ink-50">
+          <h1 className="display-stencil text-hero text-ink-900">
             We answer.
             <br />
-            <span className="text-signal-500">Pick a door.</span>
+            <span className="italic text-navy-600">Pick a door.</span>
           </h1>
-          <p className="mt-8 max-w-2xl text-deck text-ink-200">
+          <p className="mt-8 max-w-2xl text-deck text-ink-600">
             We read everything that comes in. We don&rsquo;t respond to
             everything — but we respond more than most newsrooms do. If you
             need a guaranteed reply, send a tip.
@@ -74,19 +74,19 @@ export default function ContactPage() {
               return (
                 <li
                   key={c.label}
-                  className="group relative overflow-hidden rounded-md border border-white/10 bg-ink-900/40 p-8 transition-colors hover:border-signal-500/40"
+                  className="group relative overflow-hidden rounded-md border border-ink-900/10 bg-paper p-8 transition-colors hover:border-navy-600/40 hover:shadow-sm"
                 >
-                  <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-signal-400 transition-colors group-hover:border-signal-500/60 group-hover:bg-signal-500/10">
+                  <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink-900/15 text-navy-600 transition-colors group-hover:border-navy-600/60 group-hover:bg-navy-50">
                     <c.Icon size={16} />
                   </div>
                   <p className="kicker">{c.label}</p>
-                  <h3 className="mt-2 font-display text-2xl font-bold tracking-tight text-ink-50 break-words">
+                  <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink-900 break-words">
                     {c.head}
                   </h3>
-                  <p className="mt-3 text-ink-300">{c.body}</p>
+                  <p className="mt-3 text-ink-500">{c.body}</p>
                   <Anchor
                     href={c.cta.href}
-                    className="mt-6 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-300 hover:text-signal-200"
+                    className="mt-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-navy-600 hover:text-navy-700"
                   >
                     {c.cta.label}
                     <ArrowRight size={14} />
@@ -96,15 +96,15 @@ export default function ContactPage() {
             })}
           </ul>
 
-          <div className="mt-16 rounded-md border border-dashed border-white/15 p-8">
+          <div className="mt-16 rounded-md border border-dashed border-ink-900/20 bg-paper-100 p-8">
             <p className="kicker mb-3">Slow lane</p>
-            <h3 className="font-display text-2xl font-bold tracking-tight text-ink-50">
+            <h3 className="font-display text-2xl font-semibold tracking-tight text-ink-900">
               Postal mail
             </h3>
-            <p className="mt-3 max-w-prose text-ink-300">
+            <p className="mt-3 max-w-prose text-ink-500">
               For court filings, certified documents, and analog tips:
               <br />
-              <span className="mt-3 inline-block font-mono text-[12px] uppercase tracking-[0.18em] text-ink-100">
+              <span className="mt-3 inline-block text-[12px] font-semibold uppercase tracking-[0.18em] text-ink-700">
                 Deep State Media · PO Box 0001 · Washington, DC 20001
                 <br />
                 (Replace with the real mailing address before launch.)

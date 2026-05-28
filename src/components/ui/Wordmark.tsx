@@ -1,9 +1,9 @@
 import { cn } from "@/lib/cn";
 
 /**
- * Stacked wordmark: "DEEP / STATE / MEDIA" — set in our display face, with
- * a punctuating signal-red bullet between the words. Small variant is a
- * compact horizontal lockup for the nav.
+ * Editorial wordmark set in the display serif. Inline = compact horizontal
+ * lockup for the nav; stack = large masthead lockup. A single navy mark
+ * between words carries the brand identity (red is reserved for CTAs).
  */
 export function Wordmark({
   variant = "stack",
@@ -16,15 +16,15 @@ export function Wordmark({
     return (
       <span
         className={cn(
-          "inline-flex items-center gap-2 font-display font-bold tracking-tightest leading-none",
+          "inline-flex items-baseline gap-1.5 font-display font-semibold leading-none",
           className,
         )}
       >
-        <span className="text-[1.05rem] uppercase">DEEP</span>
-        <span className="mx-0.5 inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />
-        <span className="text-[1.05rem] uppercase">STATE</span>
-        <span className="mx-0.5 inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />
-        <span className="text-[1.05rem] uppercase">MEDIA</span>
+        <span className="text-[1.15rem] tracking-tight">Deep</span>
+        <span className="mb-0.5 inline-block h-1 w-1 self-center rounded-full bg-navy-600" />
+        <span className="text-[1.15rem] tracking-tight">State</span>
+        <span className="mb-0.5 inline-block h-1 w-1 self-center rounded-full bg-navy-600" />
+        <span className="text-[1.15rem] tracking-tight">Media</span>
       </span>
     );
   }
@@ -32,13 +32,16 @@ export function Wordmark({
   return (
     <span
       className={cn(
-        "inline-flex flex-col font-display font-bold uppercase tracking-tightest leading-[0.85]",
+        "inline-flex flex-col font-display font-semibold leading-[0.92] tracking-tight",
         className,
       )}
     >
       <span>Deep</span>
-      <span className="text-signal-500">State</span>
-      <span>Media</span>
+      <span>State</span>
+      <span className="inline-flex items-center gap-3">
+        Media
+        <span aria-hidden className="mt-2 inline-block h-2.5 w-2.5 rounded-full bg-signal-500" />
+      </span>
     </span>
   );
 }

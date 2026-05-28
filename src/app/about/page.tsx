@@ -34,7 +34,7 @@ const STANDARDS = [
   {
     n: "05",
     h: "Independent by structure.",
-    p: "Reader-funded. No corporate ownership. No party affiliation. No advertiser veto. Editorial decisions are made by editors only.",
+    p: "No corporate ownership. No party affiliation. Editorial decisions are made by editors only.",
   },
   {
     n: "06",
@@ -46,15 +46,15 @@ const STANDARDS = [
 export default function AboutPage() {
   return (
     <>
-      <section className="relative border-b border-white/5 pb-20 pt-40">
+      <section className="relative border-b border-ink-900/10 bg-paper-100 pb-20 pt-40">
         <Container>
           <p className="kicker mb-6">The Charter</p>
-          <h1 className="display-stencil text-hero text-ink-50">
+          <h1 className="display-stencil text-hero text-ink-900">
             We report on
             <br />
-            <span className="text-signal-500">power.</span>
+            <span className="italic text-navy-600">power.</span>
           </h1>
-          <p className="mt-8 max-w-2xl text-deck text-ink-200">
+          <p className="mt-8 max-w-2xl text-deck text-ink-600">
             Deep State Media is an independent investigative newsroom. We
             cover the people who actually run things — the operators, the
             donors, the consultants, the staffers — across the aisle and the
@@ -65,16 +65,16 @@ export default function AboutPage() {
       </section>
 
       {/* Mission deep-dive */}
-      <section className="border-b border-white/5 py-32">
+      <section className="border-b border-ink-900/10 bg-paper py-32">
         <Container size="lg" className="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
           <div>
             <p className="kicker mb-4">The why</p>
-            <h2 className="display-stencil text-title text-ink-50">
+            <h2 className="display-stencil text-title text-ink-900">
               The press
               <br />
               flinches.
               <br />
-              <span className="text-signal-500">We don&rsquo;t.</span>
+              <span className="italic text-navy-600">We don&rsquo;t.</span>
             </h2>
           </div>
           <div className="prose-editorial">
@@ -100,11 +100,11 @@ export default function AboutPage() {
       </section>
 
       {/* Editorial Standards */}
-      <section className="border-b border-white/5 py-32">
+      <section className="border-b border-ink-900/10 bg-paper-100 py-32">
         <Container>
           <div className="mb-12">
             <p className="kicker mb-4">Editorial standards</p>
-            <h2 className="display-stencil text-title text-ink-50">
+            <h2 className="display-stencil text-title text-ink-900">
               How we work.
             </h2>
           </div>
@@ -114,55 +114,55 @@ export default function AboutPage() {
                 key={s.n}
                 as="li"
                 delay={i * 0.05}
-                className="group relative overflow-hidden rounded-md border border-white/10 bg-ink-900/40 p-6 hover:border-signal-500/40"
+                className="group relative overflow-hidden rounded-md border border-ink-900/10 bg-paper p-6 transition-colors hover:border-navy-600/40 hover:shadow-sm"
               >
-                <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-signal-400">
+                <p className="font-display text-2xl font-semibold text-signal-500">
                   {s.n}
                 </p>
-                <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink-50">
+                <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink-900">
                   {s.h}
                 </h3>
-                <p className="mt-3 text-ink-300">{s.p}</p>
+                <p className="mt-3 text-ink-500">{s.p}</p>
               </RevealOnScroll>
             ))}
           </ul>
         </Container>
       </section>
 
-      {/* Funding model */}
-      <section className="border-b border-white/5 py-32">
+      {/* Independence / firewall */}
+      <section className="border-b border-ink-900/10 bg-paper py-32">
         <Container size="lg" className="grid gap-12 lg:grid-cols-[1.1fr_1fr]">
           <div>
-            <p className="kicker mb-4">How we&rsquo;re paid</p>
-            <h2 className="display-stencil text-title text-ink-50">
-              Reader-funded.
+            <p className="kicker mb-4">How we operate</p>
+            <h2 className="display-stencil text-title text-ink-900">
+              Independent.
               <br />
-              <span className="text-signal-500">Period.</span>
+              <span className="italic text-navy-600">Period.</span>
             </h2>
-            <p className="mt-6 max-w-prose text-ink-200">
-              Our revenue comes from individual subscribers and explicitly-disclosed
-              philanthropic grants. We do not accept advertising. We do not
-              accept funding from political parties, campaigns, super PACs,
-              foreign governments, or corporate entities seeking favorable
-              coverage.
+            <p className="mt-6 max-w-prose text-ink-600">
+              Deep State Media is a for-profit, independently-owned company. A
+              hard wall separates the business from the newsroom: advertisers and
+              partners never see a story before it runs, and they never decide
+              what we cover. We take no money from political parties, campaigns,
+              super PACs, or foreign governments.
             </p>
-            <p className="mt-4 max-w-prose text-ink-300">
-              Our annual funding disclosure is published every January 1 with
-              the names of donors above a $5,000 contribution threshold.
+            <p className="mt-4 max-w-prose text-ink-500">
+              When a sponsor or partner has a stake in a story, we disclose it
+              inside the story. Editorial decisions are made by editors only.
             </p>
           </div>
-          <div className="rounded-md border border-white/10 bg-ink-900/40 p-8">
-            <p className="kicker mb-4">Quick stats</p>
+          <div className="rounded-md border border-ink-900/10 bg-paper-100 p-8">
+            <p className="kicker mb-4">The firewall</p>
             <dl className="space-y-5">
               {[
-                { k: "Revenue from advertisers", v: "0%" },
                 { k: "Revenue from political parties", v: "0%" },
-                { k: "Revenue from readers", v: "100%" },
-                { k: "Funding disclosure cadence", v: "Annual" },
+                { k: "Advertiser say over coverage", v: "None" },
+                { k: "Conflicts disclosed in-story", v: "Always" },
+                { k: "Owned by", v: "Its founders" },
               ].map((r) => (
-                <div key={r.k} className="flex items-baseline justify-between gap-4 border-b border-white/5 pb-3 last:border-b-0">
-                  <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-300">{r.k}</dt>
-                  <dd className="font-display text-2xl font-bold text-signal-500">{r.v}</dd>
+                <div key={r.k} className="flex items-baseline justify-between gap-4 border-b border-ink-900/10 pb-3 last:border-b-0">
+                  <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-500">{r.k}</dt>
+                  <dd className="font-display text-2xl font-semibold text-navy-600">{r.v}</dd>
                 </div>
               ))}
             </dl>
@@ -171,36 +171,36 @@ export default function AboutPage() {
       </section>
 
       {/* Big CTAs */}
-      <section className="py-32">
+      <section className="bg-paper-100 py-32">
         <Container className="grid gap-6 md:grid-cols-2">
           <Link
             href="/team"
-            className="group relative overflow-hidden rounded-md border border-white/10 bg-ink-900/40 p-10 transition-colors hover:border-signal-500/40"
+            className="group relative overflow-hidden rounded-md border border-ink-900/10 bg-paper p-10 transition-colors hover:border-navy-600/40 hover:shadow-sm"
           >
             <p className="kicker mb-3">Who we are</p>
-            <h3 className="font-display text-3xl font-bold tracking-tight text-ink-50">
+            <h3 className="font-display text-3xl font-semibold tracking-tight text-ink-900">
               Meet the masthead
             </h3>
-            <p className="mt-3 text-ink-300">
+            <p className="mt-3 text-ink-500">
               Founders, contributors, and the central figures behind Deep State Media.
             </p>
-            <span className="mt-6 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-300">
+            <span className="mt-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-navy-600 group-hover:text-navy-700">
               The team <ArrowRight size={14} />
             </span>
           </Link>
           <Link
             href="/tip"
-            className="group relative overflow-hidden rounded-md border border-signal-500/40 bg-signal-500/10 p-10 transition-colors hover:bg-signal-500/15"
+            className="group relative overflow-hidden rounded-md border border-signal-500/30 bg-signal-50 p-10 transition-colors hover:border-signal-500/60"
           >
-            <p className="kicker mb-3 text-signal-300">Have something for us?</p>
-            <h3 className="font-display text-3xl font-bold tracking-tight text-ink-50">
+            <p className="kicker mb-3 text-signal-600">Have something for us?</p>
+            <h3 className="font-display text-3xl font-semibold tracking-tight text-ink-900">
               Send a tip.
             </h3>
-            <p className="mt-3 text-ink-200">
+            <p className="mt-3 text-ink-600">
               Documents, screenshots, voicemails — anonymously if you need it.
               We&rsquo;ll read every line.
             </p>
-            <span className="mt-6 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-signal-200">
+            <span className="mt-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-signal-600 group-hover:text-signal-700">
               Secure tip line <ArrowRight size={14} />
             </span>
           </Link>

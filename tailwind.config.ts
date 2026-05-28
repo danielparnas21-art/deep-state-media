@@ -8,84 +8,88 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Core canvas: deep, near-black with a chromatic shift
+        // Warm off-white editorial canvas — the resting state of the brand.
+        paper: {
+          DEFAULT: "#FBFAF6",
+          100: "#F4F1EA",
+          200: "#EBE7DC",
+          300: "#DED9CB",
+        },
+        // Warm neutral gray — dark end is body text, light end is reversed type.
         ink: {
-          950: "#06070A",
-          900: "#0A0B10",
-          800: "#101218",
-          700: "#171A22",
-          600: "#22262F",
-          500: "#2D323D",
-          400: "#525866",
-          300: "#7C8392",
-          200: "#A8AEBC",
-          100: "#D9DCE3",
-          50:  "#F2F3F6",
+          50:  "#F6F4EF",
+          100: "#E8E4DB",
+          200: "#CFC9BC",
+          300: "#A8A294",
+          400: "#7C7669",
+          500: "#5A554B",
+          600: "#423E36",
+          700: "#2C2924",
+          800: "#1C1A16",
+          900: "#14120E",
+          950: "#0B0A07",
         },
-        // Signal red — the electric accent
+        // Deep ink-blue — the primary identity accent (links, rules, dark features).
+        navy: {
+          50:  "#EDF1F8",
+          100: "#D5E0F0",
+          200: "#AABFE0",
+          300: "#7796C7",
+          400: "#456EA8",
+          500: "#284F86",
+          600: "#1C3C6B",
+          700: "#152D52",
+          800: "#0F2140",
+          900: "#0A172E",
+          950: "#060F20",
+        },
+        // Warm editorial red — reserved for CTAs, breaking tags, the wordmark mark.
         signal: {
-          50:  "#FFE9E9",
-          100: "#FFC7C7",
-          200: "#FF9A9A",
-          300: "#FF6D6D",
-          400: "#FF4747",
-          500: "#FF2D2D", // primary accent
-          600: "#E51F1F",
-          700: "#B81515",
-          800: "#7E0D0D",
-          900: "#4A0707",
-        },
-        // Hazard yellow for archival / redaction accents
-        hazard: {
-          DEFAULT: "#F5E663",
-          dim: "#A89E3F",
+          50:  "#FBEAE7",
+          100: "#F6CFC8",
+          200: "#EDA79B",
+          300: "#E27E6D",
+          400: "#D85844",
+          500: "#C8392A", // primary CTA red
+          600: "#AC2E22",
+          700: "#8A241B",
+          800: "#641A14",
+          900: "#42110D",
         },
         bone: "#EEEAE0",
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
-        "hero": ["clamp(3.5rem, 12vw, 11rem)", { lineHeight: "0.88", letterSpacing: "-0.04em" }],
-        "title": ["clamp(2.25rem, 6vw, 5.5rem)", { lineHeight: "0.95", letterSpacing: "-0.03em" }],
-        "headline": ["clamp(1.75rem, 3.5vw, 3rem)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
-        "deck": ["clamp(1.125rem, 1.6vw, 1.5rem)", { lineHeight: "1.4", letterSpacing: "-0.01em" }],
-        "kicker": ["0.75rem", { lineHeight: "1", letterSpacing: "0.18em" }],
+        "hero": ["clamp(3rem, 8.5vw, 8rem)", { lineHeight: "1.0", letterSpacing: "-0.02em" }],
+        "title": ["clamp(2rem, 5vw, 4rem)", { lineHeight: "1.04", letterSpacing: "-0.02em" }],
+        "headline": ["clamp(1.6rem, 3vw, 2.5rem)", { lineHeight: "1.1", letterSpacing: "-0.015em" }],
+        "deck": ["clamp(1.125rem, 1.6vw, 1.45rem)", { lineHeight: "1.45", letterSpacing: "-0.005em" }],
+        "kicker": ["0.72rem", { lineHeight: "1", letterSpacing: "0.2em" }],
       },
       letterSpacing: {
-        tightest: "-0.05em",
+        tightest: "-0.04em",
       },
       maxWidth: {
-        measure: "68ch",
-        prose: "72ch",
+        measure: "66ch",
+        prose: "70ch",
       },
       transitionTimingFunction: {
         "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
         "in-out-expo": "cubic-bezier(0.87, 0, 0.13, 1)",
       },
       animation: {
-        "marquee": "marquee 40s linear infinite",
-        "pulse-dot": "pulse-dot 1.8s ease-in-out infinite",
-        "scanlines": "scanlines 8s linear infinite",
+        "marquee": "marquee 50s linear infinite",
       },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
-        "pulse-dot": {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.4", transform: "scale(0.85)" },
-        },
-        scanlines: {
-          "0%": { backgroundPosition: "0 0" },
-          "100%": { backgroundPosition: "0 100%" },
-        },
-      },
-      backgroundImage: {
-        "grain": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
       },
     },
   },

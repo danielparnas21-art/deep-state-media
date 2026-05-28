@@ -44,18 +44,18 @@ export function Countdown() {
       {items.map((it) => (
         <div
           key={it.label}
-          className="rounded-md border border-white/10 bg-ink-900/50 p-4 backdrop-blur"
+          className="rounded-md border border-white/10 bg-navy-950/50 p-4 backdrop-blur"
         >
           <motion.div
             key={mounted ? it.value : "ssr"}
             initial={{ opacity: 0.6, y: -2 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="display-stencil text-[clamp(2rem,4vw,3.5rem)] leading-none text-signal-500 tabular-nums"
+            className="display-stencil text-[clamp(2rem,4vw,3.5rem)] leading-none text-signal-400 tabular-nums"
           >
             {String(it.value).padStart(it.pad, "0")}
           </motion.div>
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-300">
+          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-navy-200">
             {it.label}
           </p>
         </div>

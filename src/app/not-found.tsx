@@ -6,42 +6,33 @@ export default function NotFound() {
   return (
     <section
       aria-label="Page not found"
-      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-ink-950"
+      className="relative isolate flex min-h-[100svh] items-center overflow-hidden bg-paper-100"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[60vh] bg-[radial-gradient(120%_60%_at_50%_100%,rgba(255,45,45,0.10),transparent_70%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[60vh] bg-[radial-gradient(120%_60%_at_50%_100%,rgba(28,60,107,0.06),transparent_70%)]"
       />
       <Container className="relative">
-        <p className="kicker mb-6">Status — 404 · Redacted</p>
-        <h1 className="display-stencil text-hero leading-[0.85] text-ink-50">
+        <p className="kicker mb-6">Status — 404</p>
+        <h1 className="display-stencil text-hero leading-[0.9] text-ink-900">
           We can&rsquo;t
           <br />
-          <span className="text-signal-500">find that file.</span>
+          <span className="italic text-navy-600">find that page.</span>
         </h1>
-        <p className="mt-8 max-w-xl text-deck text-ink-200">
-          The URL you reached isn&rsquo;t in the dossier — yet. The story may
-          have moved. It may have been classified. It may never have existed.
+        <p className="mt-8 max-w-xl text-deck text-ink-600">
+          The URL you reached isn&rsquo;t in our files — yet. The story may
+          have moved, or it may never have existed at this address.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
             href="/"
-            className="group inline-flex items-center gap-3 rounded-full bg-signal-500 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-black hover:translate-x-0.5"
+            className="group inline-flex items-center gap-3 rounded-full bg-signal-500 px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-signal-600"
           >
             Back to the masthead <ArrowRight size={14} />
           </Link>
           <Link
             href="/writings"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-100 hover:border-signal-500/60 hover:text-signal-300"
+            className="inline-flex items-center gap-2 rounded-full border border-ink-900/20 px-4 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-700 transition-colors hover:border-navy-600 hover:text-navy-600"
           >
             Read the column
           </Link>

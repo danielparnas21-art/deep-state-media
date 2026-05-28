@@ -18,10 +18,26 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
       return;
     }
     setSubmitting(true);
-    // Stub backend — replace with real subscribe endpoint
-    await new Promise((r) => setTimeout(r, 700));
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: compact ? "newsletter-compact" : "newsletter",
+        }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Something went wrong — try again.");
+      }
+    } catch {
+      setError("Network hiccup — try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -37,7 +53,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="flex items-center gap-3 rounded-full border border-signal-500/40 bg-signal-500/10 px-5 py-4 font-mono text-[12px] uppercase tracking-[0.22em] text-signal-100"
+            className="flex items-center gap-3 rounded-full border border-navy-600/30 bg-navy-50 px-5 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-navy-700"
           >
             <Check size={16} />
             You&rsquo;re in. Watch your inbox.
@@ -48,7 +64,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="group relative flex items-center overflow-hidden rounded-full border border-white/15 bg-black/40 transition-colors focus-within:border-signal-500/60"
+            className="group relative flex items-center overflow-hidden rounded-full border border-ink-900/15 bg-white transition-colors focus-within:border-navy-500"
           >
             <input
               type="email"
@@ -57,13 +73,13 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={submitting}
-              className="w-full bg-transparent py-3.5 pl-5 pr-2 font-mono text-sm text-ink-50 placeholder:text-ink-400 focus:outline-none disabled:opacity-50"
+              className="w-full bg-transparent py-3.5 pl-5 pr-2 text-sm text-ink-900 placeholder:text-ink-400 focus:outline-none disabled:opacity-50"
               aria-label="Email address"
             />
             <button
               type="submit"
               disabled={submitting}
-              className="m-1 inline-flex items-center gap-2 rounded-full bg-signal-500 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-black transition-transform hover:translate-x-0.5 disabled:opacity-50"
+              className="m-1 inline-flex items-center gap-2 rounded-full bg-signal-500 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-signal-600 disabled:opacity-50"
             >
               {submitting ? "Sending" : compact ? "Join" : "Subscribe"}
               <ArrowRight size={14} />
@@ -72,13 +88,13 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         )}
       </AnimatePresence>
       {error && (
-        <p role="alert" className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-signal-300">
+        <p role="alert" className="mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-signal-600">
           {error}
         </p>
       )}
       {!submitted && (
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-ink-400">
-          No spam. No tracking pixels. Unsubscribe in one click.
+        <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-400">
+          No spam. Unsubscribe in one click.
         </p>
       )}
     </form>

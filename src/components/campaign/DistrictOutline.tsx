@@ -4,8 +4,8 @@ import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * Schematic outline of Florida's 27th congressional district. Not a precise
- * shapefile — intentionally stylized, brutalist, signal-red strokes against
- * the deep ink canvas. Path is drawn-on with strokeDashoffset animation.
+ * shapefile — a stylized editorial map, signal-red strokes against the deep
+ * navy canvas. Path is drawn-on with strokeDashoffset animation.
  */
 export function DistrictOutline({ className }: { className?: string }) {
   const reduce = useReducedMotion();
@@ -18,8 +18,8 @@ export function DistrictOutline({ className }: { className?: string }) {
     >
       <defs>
         <linearGradient id="dist-grad" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#FF2D2D" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#FF6D6D" stopOpacity="0.6" />
+          <stop offset="0%" stopColor="#C8392A" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#E0594B" stopOpacity="0.65" />
         </linearGradient>
         <filter id="dist-glow">
           <feGaussianBlur stdDeviation="3" />
@@ -46,7 +46,7 @@ export function DistrictOutline({ className }: { className?: string }) {
       />
       <motion.path
         d="M 130 90 L 240 70 L 340 80 L 410 110 L 480 150 L 520 220 L 510 290 L 470 350 L 420 400 L 350 420 L 270 410 L 200 380 L 140 320 L 110 250 L 100 180 Z"
-        fill="rgba(255, 45, 45, 0.06)"
+        fill="rgba(200, 57, 42, 0.07)"
         stroke="none"
       />
 
@@ -57,10 +57,10 @@ export function DistrictOutline({ className }: { className?: string }) {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ delay: 1.4, duration: 0.6 }}
       >
-        <circle cx="340" cy="240" r="14" fill="rgba(255,45,45,0.18)" filter="url(#dist-glow)" />
-        <circle cx="340" cy="240" r="6" fill="#FF2D2D" />
+        <circle cx="340" cy="240" r="14" fill="rgba(200,57,42,0.20)" filter="url(#dist-glow)" />
+        <circle cx="340" cy="240" r="6" fill="#C8392A" />
         <line x1="340" y1="240" x2="500" y2="240" stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="2 4" />
-        <text x="508" y="244" fontSize="11" fill="#F2F3F6" fontFamily="var(--font-mono)" letterSpacing="0.18em">
+        <text x="508" y="244" fontSize="11" fill="#F4F1EA" fontFamily="var(--font-mono)" letterSpacing="0.18em">
           FL-27 · MIAMI
         </text>
       </motion.g>
