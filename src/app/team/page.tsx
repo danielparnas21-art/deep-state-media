@@ -94,7 +94,11 @@ export default function TeamPage() {
                       {m.name}
                     </h2>
 
-                    <p className="mt-8 max-w-prose text-ink-200">{m.bio}</p>
+                    <div className="mt-8 max-w-prose space-y-5 text-ink-200">
+                      {m.bio.split(/\n\n+/).map((para, idx) => (
+                        <p key={idx}>{para}</p>
+                      ))}
+                    </div>
 
                     {m.quote && (
                       <figure className="relative mt-10 rounded-md border-l-2 border-signal-500 bg-ink-900/40 p-6 pl-8">
