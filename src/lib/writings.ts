@@ -94,14 +94,60 @@ function clipDek(plain: string, max = 220): string {
   return `${sliced.slice(0, lastSpace > 80 ? lastSpace : max)}…`;
 }
 
-/** Pull the first <img src="..."> URL out of post-body HTML. */
-function firstImageFromHtml(html: string): string | undefined {
-  if (!html) return undefined;
-  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-  return match?.[1];
+/**
+ * URLs/fragments we treat as promotional / recurring elements in Lev's
+ * posts (book cover, profile avatar, subscribe badges) and should not
+ * pick as a per-post cover image.
+ */
+const SKIP_IMAGE_FRAGMENTS = [
+  // Lev's Substack profile avatar — already used as his portrait elsewhere.
+  "fa4728ad-99a5-4d28-9206-4d8efbced422",
+  // Substack subscribe / share button asset paths.
+  "/subscribe-button",
+  "/share-button",
+];
+
+function isPromoImage(url: string): boolean {
+  return SKIP_IMAGE_FRAGMENTS.some((frag) => url.includes(frag));
 }
 
-function normalize(item: RawItem): Writing | null {
+function imageWidthFromUrl(url: string): number {
+  // Substack's image CDN encodes display width as `w_NNNN` inside the URL.
+  const m = url.match(/[?&,/]w_(\d+)/);
+  return m ? parseInt(m[1], 10) : 0;
+}
+
+/**
+ * Pull every <img src="..."> URL out of post-body HTML, in document order,
+ * skipping the known-promo URLs (avatar, subscribe buttons).
+ */
+function allImagesFromHtml(html: string): string[] {
+  if (!html) return [];
+  const matches = Array.from(html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi));
+  return matches.map((m) => m[1]).filter((src) => !isPromoImage(src));
+}
+
+/**
+ * Substack proxies images through `substackcdn.com/image/fetch/<params>/<src>`.
+ * Two posts referencing the same source image will have different proxy params
+ * (width, quality, etc.), so we strip the proxy wrapper for cross-post
+ * comparison.
+ */
+function canonicalImageKey(url: string): string {
+  const m = url.match(/^https:\/\/[^/]+\/image\/fetch\/[^/]+\/(https?%3A%2F%2F[^"']+)$/i);
+  if (m) {
+    try {
+      return decodeURIComponent(m[1]);
+    } catch {
+      return url;
+    }
+  }
+  return url;
+}
+
+type ParsedItem = Writing & { _bodyImages: string[] };
+
+function normalize(item: RawItem): ParsedItem | null {
   const title = textify(item.title);
   const link = textify(item.link);
   if (!title || !link) return null;
@@ -120,7 +166,7 @@ function normalize(item: RawItem): Writing | null {
   const encUrl = item.enclosure?.["@_url"];
   const encType = item.enclosure?.["@_type"] ?? "";
   const enclosureCover = encType.startsWith("image/") ? encUrl : undefined;
-  const cover = enclosureCover ?? firstImageFromHtml(contentRaw);
+  const bodyImages = allImagesFromHtml(contentRaw);
   const rt = readingTime(stripHtml(contentRaw || descriptionRaw));
 
   return {
@@ -131,9 +177,43 @@ function normalize(item: RawItem): Writing | null {
     author,
     publishedAt,
     description: dek,
-    cover,
+    // Cover from enclosure now; body-image fallback resolved post-dedup below.
+    cover: enclosureCover,
     readingTimeMin: rt,
+    _bodyImages: bodyImages,
   };
+}
+
+/**
+ * After normalizing every item, promote a body image to cover for any item
+ * still missing one — but only if that image is unique across the feed.
+ * Recurring images (book promos, banner ads, signature graphics) appear in
+ * many posts and would otherwise dominate the page.
+ */
+function resolveCoversAcrossFeed(parsed: ParsedItem[]): Writing[] {
+  const counts = new Map<string, number>();
+  for (const item of parsed) {
+    for (const u of item._bodyImages) {
+      const k = canonicalImageKey(u);
+      counts.set(k, (counts.get(k) ?? 0) + 1);
+    }
+  }
+
+  return parsed.map((item) => {
+    let cover = item.cover;
+    if (!cover) {
+      // Prefer a unique image with display width ≥ 600 if any; otherwise
+      // any unique image at all.
+      const unique = item._bodyImages.filter(
+        (u) => counts.get(canonicalImageKey(u)) === 1,
+      );
+      cover =
+        unique.find((u) => imageWidthFromUrl(u) >= 600) ?? unique[0];
+    }
+    // Strip the working field before exposing to consumers.
+    const { _bodyImages: _omit, ...rest } = item;
+    return { ...rest, cover };
+  });
 }
 
 /**
@@ -164,9 +244,11 @@ export async function listWritings(): Promise<Writing[]> {
 
   const rawItems = parsed.rss?.channel?.item;
   if (!rawItems) return [];
-  const items = (Array.isArray(rawItems) ? rawItems : [rawItems])
+  const parsedItems = (Array.isArray(rawItems) ? rawItems : [rawItems])
     .map(normalize)
-    .filter((w): w is Writing => w !== null);
+    .filter((w): w is ParsedItem => w !== null);
+
+  const items = resolveCoversAcrossFeed(parsedItems);
 
   return items.sort(
     (a, b) =>
