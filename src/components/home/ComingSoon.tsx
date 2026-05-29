@@ -260,12 +260,27 @@ export function ComingSoon() {
           >
             <Link
               href="/team"
-              className="group inline-flex items-center gap-2.5 rounded-full bg-signal-500 px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-signal-600"
+              className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-md bg-signal-500 px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-white shadow-[0_0_40px_-10px_rgba(200,57,42,0.9)] ring-1 ring-inset ring-white/20 transition-colors hover:bg-signal-600"
             >
-              Meet the team
+              {/* CRT scanline texture — clearance-badge feel */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-[0.16]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, rgba(0,0,0,0.6) 0px, rgba(0,0,0,0.6) 1px, transparent 1px, transparent 3px)",
+                }}
+              />
+              {/* Corner stamp tick */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-1.5 top-1.5 h-1.5 w-1.5 rotate-45 bg-white/40"
+              />
+              <Lock size={15} className="relative shrink-0" />
+              <span className="relative">Meet the team</span>
               <ArrowRight
                 size={16}
-                className="transition-transform group-hover:translate-x-1"
+                className="relative transition-transform group-hover:translate-x-1"
               />
             </Link>
             <a
