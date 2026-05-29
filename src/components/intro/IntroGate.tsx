@@ -22,6 +22,7 @@ const BOOT_LINES = [
   "indexing 12,418 documents",
   "cross-referencing both parties",
   "lifting the redactions",
+  "exposing the deep state",
 ];
 
 const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&/<>*+=?·";
