@@ -131,30 +131,42 @@ export function ComingSoon() {
           <motion.div
             animate={calm ? { opacity: 0.7 } : { opacity: [0.45, 0.85, 0.45], scale: [1, 1.06, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-1/3 left-1/2 h-[88vh] w-[88vh] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.6),transparent_65%)] blur-3xl"
+            className={cn(
+              "absolute -top-1/3 left-1/2 h-[88vh] w-[88vh] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.6),transparent_65%)]",
+              !calm && "blur-3xl",
+            )}
           />
           <motion.div
             animate={calm ? { opacity: 0.65 } : { opacity: [0.5, 0.85, 0.5] }}
             transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className="absolute bottom-0 right-0 h-[58vh] w-[58vh] translate-x-1/4 translate-y-1/4 rounded-full bg-[radial-gradient(circle,rgba(200,57,42,0.22),transparent_70%)] blur-3xl"
+            className={cn(
+              "absolute bottom-0 right-0 h-[58vh] w-[58vh] translate-x-1/4 translate-y-1/4 rounded-full bg-[radial-gradient(circle,rgba(200,57,42,0.22),transparent_70%)]",
+              !calm && "blur-3xl",
+            )}
           />
           <motion.div
             animate={calm ? { opacity: 0.4 } : { opacity: [0.28, 0.5, 0.28] }}
             transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-            className="absolute bottom-8 left-0 h-[42vh] w-[42vh] -translate-x-1/3 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.38),transparent_70%)] blur-3xl"
+            className={cn(
+              "absolute bottom-8 left-0 h-[42vh] w-[42vh] -translate-x-1/3 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.38),transparent_70%)]",
+              !calm && "blur-3xl",
+            )}
           />
         </motion.div>
 
         {/* Cinematic film grain — barely-there texture that keeps the dark from
-            reading as flat. Animated opacity only (transform-cheap). */}
-        <motion.div
-          aria-hidden
-          initial={{ opacity: 0.08 }}
-          animate={calm ? { opacity: 0.08 } : { opacity: [0.06, 0.11, 0.06] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="pointer-events-none absolute inset-0 z-[1] mix-blend-overlay"
-          style={{ backgroundImage: FILM_GRAIN, backgroundSize: "220px 220px" }}
-        />
+            reading as flat. The mix-blend compositing is costly on phones, so
+            it's desktop-only; on mobile the dark already reads fine without it. */}
+        {!calm && (
+          <motion.div
+            aria-hidden
+            initial={{ opacity: 0.08 }}
+            animate={{ opacity: [0.06, 0.11, 0.06] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="pointer-events-none absolute inset-0 z-[1] mix-blend-overlay"
+            style={{ backgroundImage: FILM_GRAIN, backgroundSize: "220px 220px" }}
+          />
+        )}
 
         {/* Vignette to focus the eye on the headline and deepen the edges. */}
         <div
