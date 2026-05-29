@@ -157,6 +157,15 @@ export function IntroGate() {
     timers.current.push(t);
   };
 
+  // Returning visitors who already gave their email skip the capture prompt
+  // entirely. The cinematic boot still plays for everyone, but the instant it
+  // resolves we breach straight into the site instead of asking them again.
+  useEffect(() => {
+    if (known && phase === "ready") enter();
+    // enter() is guarded against re-entry; deps intentionally minimal.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [known, phase]);
+
   // Fast-forward the decrypt to the prompt without bypassing the email gate.
   const skipBoot = () => {
     timers.current.forEach(clearTimeout);
