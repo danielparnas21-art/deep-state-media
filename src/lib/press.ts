@@ -39,6 +39,14 @@ export const PRESS: PressItem[] = [
     excerpt:
       "Deep State Media contributing reporter Jonathan Hay steps forward publicly to push for accountability.",
   },
+  {
+    outlet: "WVXU · NPR",
+    title: "NBA Agent Works To Free Otto Warmbier",
+    date: "2016-04-28",
+    url: "https://www.wvxu.org/local-news/2016-04-28/nba-agent-works-to-free-otto-warmbier",
+    excerpt:
+      "Co-founder David Sugarman leverages his network and pressure-campaign playbook — after #BringBaeBack helped free Kenneth Bae — to push for the release of an American detained in North Korea.",
+  },
 ];
 
 /** Newest first, with any `featured` item floated to the very top. */
