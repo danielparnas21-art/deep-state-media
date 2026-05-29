@@ -304,15 +304,18 @@ export function IntroGate() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-500 opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-500" />
             </span>
-            Secure channel
+            <span className="hidden sm:inline">Secure channel</span>
           </span>
           <span className="tabular-nums text-paper/55">
-            {phase === "typing"
-              ? charged
-                ? "BREACHING"
-                : "DECRYPTING"
-              : "UNLOCKED"}{" "}
-            · {progress}%
+            <span className="hidden sm:inline">
+              {phase === "typing"
+                ? charged
+                  ? "BREACHING"
+                  : "DECRYPTING"
+                : "UNLOCKED"}{" "}
+              ·{" "}
+            </span>
+            {progress}%
           </span>
         </div>
 

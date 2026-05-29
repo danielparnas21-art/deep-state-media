@@ -65,8 +65,12 @@ export function CodeRain() {
 
     const FONT = 16;
     const HEAD = mix(NAVY, WHITE, 0.55); // luminous leading glyph for navy streams
+    // Touch / small screens: drop the per-glyph bloom (shadowBlur is the most
+    // expensive canvas op) and cap DPR, so the field stays smooth on phones.
+    const lite = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
     let w = 0;
     let h = 0;
+    let lastW = window.innerWidth;
     let cols: Column[] = [];
 
     const setFont = () => {
@@ -75,9 +79,12 @@ export function CodeRain() {
     };
 
     const build = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
       w = window.innerWidth;
-      h = window.innerHeight;
+      lastW = w;
+      // Pad the height so the canvas still covers the screen when a mobile URL
+      // bar collapses and grows the viewport — without forcing a rebuild.
+      h = window.innerHeight + 140;
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       canvas.style.width = `${w}px`;
@@ -88,11 +95,14 @@ export function CodeRain() {
       ctx.fillRect(0, 0, w, h);
 
       const count = Math.ceil(w / FONT);
+      const rows = h / FONT;
       cols = Array.from({ length: count }, (_, i) => {
         const depth = Math.random();
         return {
           x: i * FONT,
-          drop: -Math.random() * (h / FONT) - 4,
+          // Seed across the screen (not all above it) so the field is alive
+          // immediately instead of cascading in from the top after a (re)build.
+          drop: Math.random() * rows * 1.4 - rows * 0.4,
           row: -9999,
           speed: 0.4 + depth * 0.95,
           alpha: 0.3 + depth * 0.6, // wide range => real depth
@@ -131,13 +141,14 @@ export function CodeRain() {
         const alpha = c.kind === 0 ? Math.min(1, c.alpha + 0.22) : c.alpha;
         const bloom = c.kind !== 0;
 
-        if (bloom) {
+        const glow = bloom && !lite;
+        if (glow) {
           ctx.shadowColor = rgb(color, 0.85);
           ctx.shadowBlur = c.kind === 2 ? 9 : 6;
         }
         ctx.fillStyle = rgb(color, alpha);
         ctx.fillText(c.glyph, c.x, y);
-        if (bloom) ctx.shadowBlur = 0;
+        if (glow) ctx.shadowBlur = 0;
       }
     };
 
@@ -160,6 +171,7 @@ export function CodeRain() {
       build();
       paintStatic();
       const onResizeStatic = () => {
+        if (window.innerWidth === lastW) return; // ignore mobile URL-bar resizes
         build();
         paintStatic();
       };
@@ -180,6 +192,10 @@ export function CodeRain() {
 
     let resizeTimer: ReturnType<typeof setTimeout>;
     const onResize = () => {
+      // Only a real width change warrants a rebuild. Mobile browsers fire
+      // resize on every URL-bar show/hide (height-only); rebuilding there would
+      // wipe and restart the whole field, which is what reads as "glitchy."
+      if (window.innerWidth === lastW) return;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(build, 150);
     };

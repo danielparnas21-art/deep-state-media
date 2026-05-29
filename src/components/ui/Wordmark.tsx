@@ -16,15 +16,15 @@ export function Wordmark({
     return (
       <span
         className={cn(
-          "inline-flex items-baseline gap-1.5 font-display font-semibold leading-none",
+          "inline-flex items-baseline gap-1 font-display font-semibold leading-none sm:gap-1.5",
           className,
         )}
       >
-        <span className="text-[1.15rem] tracking-tight">Deep</span>
+        <span className="text-base tracking-tight sm:text-[1.15rem]">Deep</span>
         <span className="mb-0.5 inline-block h-1 w-1 self-center rounded-full bg-navy-600" />
-        <span className="text-[1.15rem] tracking-tight">State</span>
+        <span className="text-base tracking-tight sm:text-[1.15rem]">State</span>
         <span className="mb-0.5 inline-block h-1 w-1 self-center rounded-full bg-navy-600" />
-        <span className="text-[1.15rem] tracking-tight">Media</span>
+        <span className="text-base tracking-tight sm:text-[1.15rem]">Media</span>
       </span>
     );
   }

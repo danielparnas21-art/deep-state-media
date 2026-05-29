@@ -11,6 +11,7 @@ import {
 import { ArrowRight, ArrowUpRight, Lock, ShieldCheck } from "lucide-react";
 import { EASE_OUT_EXPO, stagger, wordRise } from "@/lib/motion";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
+import { useLite } from "@/lib/useLite";
 import { cn } from "@/lib/cn";
 
 /** A small pulsing signal dot — the brand's "live / on the record" tell. */
@@ -83,6 +84,11 @@ const FRONTS = [
 
 export function ComingSoon() {
   const reduce = useReducedMotion();
+  const lite = useLite();
+  // Hold the scroll-parallax + animated blur/blend layers static on touch /
+  // small screens (or reduced motion) — moving 64px-blurred blobs every scroll
+  // frame is what makes mobile stutter. Desktop keeps the full motion.
+  const calm = reduce || lite;
   const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
 
@@ -104,8 +110,8 @@ export function ComingSoon() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const glowY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "28%"]);
-  const ghostY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "-16%"]);
+  const glowY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
+  const ghostY = useTransform(scrollYProgress, [0, 1], ["0%", "-16%"]);
 
   const state = revealed ? "visible" : "hidden";
 
@@ -119,21 +125,21 @@ export function ComingSoon() {
       >
         <motion.div
           aria-hidden
-          style={{ y: glowY }}
+          style={{ y: calm ? 0 : glowY }}
           className="pointer-events-none absolute inset-0"
         >
           <motion.div
-            animate={reduce ? undefined : { opacity: [0.45, 0.85, 0.45], scale: [1, 1.06, 1] }}
+            animate={calm ? { opacity: 0.7 } : { opacity: [0.45, 0.85, 0.45], scale: [1, 1.06, 1] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             className="absolute -top-1/3 left-1/2 h-[88vh] w-[88vh] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.6),transparent_65%)] blur-3xl"
           />
           <motion.div
-            animate={reduce ? undefined : { opacity: [0.5, 0.85, 0.5] }}
+            animate={calm ? { opacity: 0.65 } : { opacity: [0.5, 0.85, 0.5] }}
             transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
             className="absolute bottom-0 right-0 h-[58vh] w-[58vh] translate-x-1/4 translate-y-1/4 rounded-full bg-[radial-gradient(circle,rgba(200,57,42,0.22),transparent_70%)] blur-3xl"
           />
           <motion.div
-            animate={reduce ? undefined : { opacity: [0.28, 0.5, 0.28] }}
+            animate={calm ? { opacity: 0.4 } : { opacity: [0.28, 0.5, 0.28] }}
             transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 3 }}
             className="absolute bottom-8 left-0 h-[42vh] w-[42vh] -translate-x-1/3 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.38),transparent_70%)] blur-3xl"
           />
@@ -144,7 +150,7 @@ export function ComingSoon() {
         <motion.div
           aria-hidden
           initial={{ opacity: 0.08 }}
-          animate={reduce ? { opacity: 0.08 } : { opacity: [0.06, 0.11, 0.06] }}
+          animate={calm ? { opacity: 0.08 } : { opacity: [0.06, 0.11, 0.06] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           className="pointer-events-none absolute inset-0 z-[1] mix-blend-overlay"
           style={{ backgroundImage: FILM_GRAIN, backgroundSize: "220px 220px" }}
@@ -162,7 +168,7 @@ export function ComingSoon() {
 
         <motion.span
           aria-hidden
-          style={{ y: ghostY }}
+          style={{ y: calm ? 0 : ghostY }}
           className="pointer-events-none absolute -right-6 bottom-2 select-none font-display text-[clamp(7rem,20vw,20rem)] font-semibold leading-none tracking-tighter text-white/[0.025]"
         >
           DSM
@@ -349,7 +355,7 @@ export function ComingSoon() {
         <motion.div
           aria-hidden
           animate={
-            reduce ? undefined : { backgroundPosition: ["0% 0%", "100% 100%"] }
+            calm ? undefined : { backgroundPosition: ["0% 0%", "100% 100%"] }
           }
           transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
           className="pointer-events-none absolute inset-0 opacity-70"
@@ -440,8 +446,8 @@ function FrontRow({
     <motion.li
       initial={reduce ? false : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.6, delay: index * 0.08, ease: EASE_OUT_EXPO }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: EASE_OUT_EXPO }}
     >
       {live ? (
         <a
