@@ -92,7 +92,7 @@ export const TEAM: TeamMember[] = [
   {
     slug: "daniel-parnas",
     name: "Daniel Parnas",
-    role: "Co-founder · Social & Growth",
+    role: "Co-founder",
     bio:
       "Daniel Parnas is Lev Parnas’s son and a co-founder of Deep State Media. He grew up inside the kind of rooms most reporters only read transcripts of. From a young age he was at his father’s side, sitting in on meetings with oligarchs, sitting members of Congress, donors, defectors, and business operators most of the public will never see in a press release. He has seen every side of it — the people who run things, the people the powerful step on, and the spaces in between most newsrooms never get a look at.\n\nAt Deep State Media he leads social strategy and audience-building, and uses that platform to talk directly to a generation of young men who deserve a better script than the one currently being sold to them online. He’s unapologetically pro-ambition, pro-success, and absolutely uncompromising on the protection of women and children. The newsroom does the reporting; Daniel makes sure people see it.",
     quote: {
