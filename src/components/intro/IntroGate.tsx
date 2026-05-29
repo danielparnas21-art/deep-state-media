@@ -83,11 +83,11 @@ declare global {
   }
 }
 
-type Phase = "typing" | "ready" | "exiting" | "done";
+type Phase = "idle" | "typing" | "ready" | "exiting" | "done";
 
 export function IntroGate() {
   const reduce = useReducedMotion();
-  const [phase, setPhase] = useState<Phase>("typing");
+  const [phase, setPhase] = useState<Phase>("idle");
   // The boot lines, personalized on the client after mount (see effect below).
   // Starts as the static set so SSR and first client render match.
   const [bootLines, setBootLines] = useState<string[]>(BOOT_LINES);
@@ -174,6 +174,15 @@ export function IntroGate() {
     if (next) armGateAudio(); // this handler is itself a user gesture
   };
 
+  // The one-tap unlock: this tap is the user gesture browsers require, so it
+  // both arms the audio and kicks off the boot — the whole decrypt sequence
+  // then plays with sound from the very first frame.
+  const initiate = () => {
+    if (phase !== "idle") return;
+    if (soundOn) armGateAudio();
+    setPhase("typing");
+  };
+
   // Decrypt boot sequence — each line scrambles random glyphs, then resolves
   // left-to-right to the real text before the next line begins. Skipped under
   // reduced motion (prompt shows immediately).
@@ -183,6 +192,9 @@ export function IntroGate() {
       setProgress(100);
       return;
     }
+    // Hold until the visitor taps "initiate" — that gesture both starts the
+    // boot and unlocks audio, so the whole sequence plays with sound.
+    if (phase !== "typing") return;
 
     const totalChars = bootLines.reduce((n, l) => n + l.length, 0);
     const out: string[] = [];
@@ -243,7 +255,7 @@ export function IntroGate() {
       timers.current = [];
       if (interval.current) clearInterval(interval.current);
     };
-  }, [reduce, bootLines]);
+  }, [reduce, bootLines, phase]);
 
   // Lock body scroll while the gate is up.
   useEffect(() => {
@@ -362,9 +374,14 @@ export function IntroGate() {
         transition={{ duration: reduce ? 0.2 : 0.92, ease: EASE_IN_OUT_EXPO }}
       />
 
-      {/* Content layer — fades out as the doors open */}
+      {/* Content layer — fades out as the doors open. While idle, the whole
+          surface is the initiate trigger so any tap begins the sequence. */}
       <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
+        onClick={phase === "idle" ? initiate : undefined}
+        className={cn(
+          "absolute inset-0 flex flex-col items-center justify-center px-6 text-center",
+          phase === "idle" && "cursor-pointer",
+        )}
         initial={false}
         animate={{ opacity: exiting ? 0 : 1 }}
         transition={{ duration: exiting ? 0.3 : 0.4, ease: EASE_OUT_EXPO }}
@@ -382,8 +399,8 @@ export function IntroGate() {
             }}
           />
           <div className="absolute left-1/2 top-1/2 h-[55vh] w-[55vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.45),transparent_68%)] blur-2xl" />
-          {/* Live "decryption console" decor — only while the boot is running */}
-          {!reduce && phase === "typing" && (
+          {/* Live "decryption console" decor — during the standby + boot */}
+          {!reduce && (phase === "idle" || phase === "typing") && (
             <>
               {/* Matrix-style cipher rain, masked away from the center text */}
               <CodeRain />
@@ -427,7 +444,10 @@ export function IntroGate() {
             <span className="hidden sm:inline">Secure channel</span>
             <button
               type="button"
-              onClick={toggleSound}
+              onClick={(e) => {
+                e.stopPropagation(); // don't let the mute toggle also initiate
+                toggleSound();
+              }}
               aria-label={soundOn ? "Mute sound" : "Unmute sound"}
               aria-pressed={soundOn}
               className="ml-1 inline-flex items-center text-paper/40 transition-colors hover:text-paper/80"
@@ -441,7 +461,9 @@ export function IntroGate() {
                 ? charged
                   ? "BREACHING"
                   : "DECRYPTING"
-                : "UNLOCKED"}{" "}
+                : phase === "idle"
+                  ? "STANDBY"
+                  : "UNLOCKED"}{" "}
               ·{" "}
             </span>
             {progress}%
@@ -449,7 +471,40 @@ export function IntroGate() {
         </div>
 
         <AnimatePresence mode="wait">
-          {phase === "typing" ? (
+          {phase === "idle" ? (
+            <motion.div
+              key="idle"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
+              transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
+              className="relative flex flex-col items-center"
+            >
+              <p className="mb-6 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-signal-400">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />
+                Secure channel ready
+              </p>
+              <h2 className="display-stencil text-[clamp(2.4rem,7vw,5rem)] leading-[0.98] text-paper">
+                Breach the <span className="accent-signal">deep state.</span>
+              </h2>
+              <motion.button
+                type="button"
+                onClick={initiate}
+                whileHover={reduce ? undefined : { scale: 1.03 }}
+                whileTap={reduce ? undefined : { scale: 0.97 }}
+                className="group mt-10 inline-flex items-center gap-3 rounded-full bg-signal-500 px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_20px_60px_-20px_rgba(200,57,42,0.7)] transition-colors hover:bg-signal-600"
+              >
+                Initiate decryption
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </motion.button>
+              <p className="mt-5 text-[10px] uppercase tracking-[0.2em] text-paper/35">
+                tap to begin{soundOn ? " · sound on" : ""}
+              </p>
+            </motion.div>
+          ) : phase === "typing" ? (
             <motion.div
               key="boot"
               initial={{ opacity: 0 }}
