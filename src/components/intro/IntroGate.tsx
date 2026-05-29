@@ -34,21 +34,35 @@ const BOOT_LINES = [
   "exposing the deep state",
 ];
 
-// "It sees you" — rewrite the trace line with the visitor's own context
-// (timezone-derived city + local time) so the system reads as if it's scanning
-// *them*. Computed client-side and shown back to them only — never sent or
-// logged, consistent with our no-tracking posture.
+// "It sees you" — rewrite the trace line with the visitor's own context so the
+// system reads as if it's scanning *them*. Uses only signals that are actually
+// accurate client-side: exact local time and a coarse device label. (We avoid
+// timezone-to-city, which is wrong for everyone outside the zone's namesake
+// city — e.g. all of US Eastern reads as "New York".) Computed in the browser
+// and shown back to them only — never sent or logged.
 function personalizedBootLines(): string[] {
   const out = [...BOOT_LINES];
   try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-    const city = (tz.split("/").pop() || "").replace(/_/g, " ").toLowerCase();
     const time = new Date()
       .toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
       .toLowerCase();
-    if (city) out[1] = `tracing signal ▸ ${city} · ${time}`;
+    const ua = navigator.userAgent;
+    const device = /iphone/i.test(ua)
+      ? "iphone"
+      : /ipad/i.test(ua)
+        ? "ipad"
+        : /android/i.test(ua)
+          ? "android"
+          : /macintosh|mac os x/i.test(ua)
+            ? "mac"
+            : /windows/i.test(ua)
+              ? "windows"
+              : /linux/i.test(ua)
+                ? "linux"
+                : "";
+    out[1] = `tracing signal ▸ ${time}${device ? ` · ${device}` : ""}`;
   } catch {
-    /* Intl/Date unavailable — keep the generic trace line */
+    /* unavailable — keep the generic trace line */
   }
   return out;
 }
