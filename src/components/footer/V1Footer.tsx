@@ -10,8 +10,8 @@ export function V1Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative z-10 bg-[#06070d]/65 text-paper">
-      <div className="mx-auto w-full max-w-[1480px] px-6 py-16 sm:px-8 lg:px-12">
-        <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mx-auto w-full max-w-[1480px] px-6 py-10 sm:px-8 sm:py-16 lg:px-12">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
           <div>
             <Wordmark variant="inline" className="text-paper" />
             <p className="mt-4 max-w-sm text-sm text-paper/55">
@@ -32,7 +32,7 @@ export function V1Footer() {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 pt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-paper/35 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-3 pt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-paper/35 sm:mt-12 sm:flex-row sm:items-center sm:justify-between">
           <span>© {year} Deep State Media</span>
           <span>Independent · Both sides · No spin</span>
         </div>

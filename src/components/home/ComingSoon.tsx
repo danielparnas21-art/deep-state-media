@@ -377,7 +377,7 @@ export function ComingSoon() {
       <section
         id="waitlist"
         aria-labelledby="waitlist-heading"
-        className="relative isolate scroll-mt-24 overflow-hidden bg-[#06070d]/65 py-20 text-paper sm:py-24"
+        className="relative isolate scroll-mt-24 overflow-hidden bg-[#06070d]/65 pb-12 pt-20 text-paper sm:pb-20 sm:pt-24"
       >
         <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
