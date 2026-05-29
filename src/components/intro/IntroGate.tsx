@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Lock, LockOpen, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight, Check, Lock, LockOpen, Volume2, VolumeX } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { EASE_IN_OUT_EXPO, EASE_OUT_EXPO } from "@/lib/motion";
 import {
@@ -11,6 +11,7 @@ import {
   gateEnter,
   gateStab,
   gateTick,
+  gateUnlock,
   setGateMuted,
   stopGateAudio,
 } from "@/lib/gateAudio";
@@ -445,10 +446,11 @@ export function IntroGate() {
       // Network/infra hiccup — don't trap the visitor at the gate. We let them
       // in without marking them subscribed, so they're asked again next visit.
     }
-    // Flip the locked chips open as a reward beat, then breach in.
+    // Flip the locked chips open in access-granted green with a rising chime,
+    // hold the beat so it actually lands, then breach in.
     setUnlocked(true);
-    gateStab();
-    const t = setTimeout(enter, 750);
+    gateUnlock();
+    const t = setTimeout(enter, 1200);
     timers.current.push(t);
   };
 
@@ -771,14 +773,27 @@ export function IntroGate() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="group inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-signal-500 px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_20px_60px_-20px_rgba(200,57,42,0.7)] transition-colors hover:bg-signal-600 disabled:cursor-not-allowed disabled:opacity-70"
+                      className={cn(
+                        "group inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-90",
+                        unlocked
+                          ? "bg-emerald-500 shadow-[0_20px_60px_-20px_rgba(52,211,153,0.7)]"
+                          : "bg-signal-500 shadow-[0_20px_60px_-20px_rgba(200,57,42,0.7)] hover:bg-signal-600",
+                      )}
                     >
-                      {submitting ? "Unlocking…" : "Uncover the Deep State"}
-                      {!submitting && (
-                        <ArrowRight
-                          size={15}
-                          className="transition-transform group-hover:translate-x-1"
-                        />
+                      {unlocked
+                        ? "Access granted"
+                        : submitting
+                          ? "Unlocking…"
+                          : "Uncover the Deep State"}
+                      {unlocked ? (
+                        <Check size={15} />
+                      ) : (
+                        !submitting && (
+                          <ArrowRight
+                            size={15}
+                            className="transition-transform group-hover:translate-x-1"
+                          />
+                        )
                       )}
                     </button>
                   </form>
@@ -790,11 +805,16 @@ export function IntroGate() {
                     {emailError ?? ""}
                   </p>
 
-                  {/* What the email unlocks — locked until they're on the list,
-                      then flips open on submit. */}
+                  {/* What the email unlocks — locked until they're on the list.
+                      On submit they cascade open in access-granted green. */}
                   <div className="mt-6 w-full">
-                    <p className="mb-2.5 text-[10px] uppercase tracking-[0.24em] text-paper/35">
-                      Your email unlocks
+                    <p
+                      className={cn(
+                        "mb-2.5 text-[10px] font-semibold uppercase tracking-[0.24em] transition-colors duration-300",
+                        unlocked ? "text-emerald-400" : "text-paper/35",
+                      )}
+                    >
+                      {unlocked ? "Access granted" : "Your email unlocks"}
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                       {UNLOCKS.map((label, i) => (
@@ -803,26 +823,48 @@ export function IntroGate() {
                           initial={false}
                           animate={
                             unlocked
-                              ? { scale: [1, 1.05, 1] }
-                              : { scale: 1 }
+                              ? {
+                                  scale: [1, 1.08, 1],
+                                  borderColor: "rgba(52,211,153,0.55)",
+                                  backgroundColor: [
+                                    "rgba(52,211,153,0)",
+                                    "rgba(52,211,153,0.18)",
+                                    "rgba(52,211,153,0.07)",
+                                  ],
+                                  boxShadow: [
+                                    "0 0 0 rgba(52,211,153,0)",
+                                    "0 0 26px rgba(52,211,153,0.55)",
+                                    "0 0 10px rgba(52,211,153,0.12)",
+                                  ],
+                                }
+                              : {}
                           }
                           transition={{
-                            delay: unlocked ? i * 0.08 : 0,
-                            duration: 0.4,
+                            delay: unlocked ? 0.1 + i * 0.11 : 0,
+                            duration: 0.55,
                             ease: EASE_OUT_EXPO,
                           }}
                           className={cn(
-                            "flex items-center gap-2 rounded-md border px-3 py-2 text-[10px] uppercase tracking-[0.12em] transition-colors duration-300 sm:text-[11px]",
+                            "flex items-center gap-2 rounded-md border px-3 py-2 text-[10px] uppercase tracking-[0.12em] transition-colors duration-500 sm:text-[11px]",
                             unlocked
-                              ? "border-signal-500/60 text-paper/85"
+                              ? "text-emerald-100"
                               : "border-white/12 text-paper/45",
                           )}
                         >
                           {unlocked ? (
-                            <LockOpen
-                              size={12}
-                              className="shrink-0 text-signal-400"
-                            />
+                            <motion.span
+                              initial={{ scale: 0, rotate: -45 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{
+                                delay: 0.1 + i * 0.11,
+                                type: "spring",
+                                stiffness: 520,
+                                damping: 16,
+                              }}
+                              className="flex shrink-0"
+                            >
+                              <LockOpen size={12} className="text-emerald-400" />
+                            </motion.span>
                           ) : (
                             <Lock size={12} className="shrink-0 text-paper/35" />
                           )}

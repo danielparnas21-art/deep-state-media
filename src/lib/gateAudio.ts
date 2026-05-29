@@ -199,6 +199,32 @@ export function gateBreach(): void {
   noiseBurst(c, 0.35, 0.22, 1300, false);
 }
 
+/** A warm rising arpeggio — the "access granted" chime as the locks open. */
+export function gateUnlock(): void {
+  try {
+    const c = ctx;
+    const m = master; // const so the narrowing holds inside the closure
+    if (!c || !m || muted) return;
+    const now = c.currentTime;
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 · E5 · G5 · C6
+    notes.forEach((freq, i) => {
+      const t = now + i * 0.1;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.15, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+      const o = c.createOscillator();
+      o.type = "triangle";
+      o.frequency.setValueAtTime(freq, t);
+      o.connect(g).connect(m);
+      o.start(t);
+      o.stop(t + 0.65);
+    });
+  } catch {
+    /* audio unavailable — never block the gate */
+  }
+}
+
 /** Door whoosh as the gate splits open into the site. */
 export function gateEnter(): void {
   const c = ctx;
