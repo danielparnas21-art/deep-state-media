@@ -168,13 +168,14 @@ export function ComingSoon() {
           />
         )}
 
-        {/* Vignette to focus the eye on the headline and deepen the edges. */}
+        {/* Top-only shading to seat the headline — kept off the bottom edge so
+            it never creates a tonal step at the section boundary. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[1]"
           style={{
             background:
-              "radial-gradient(ellipse 92% 78% at 50% 42%, transparent 62%, rgba(2,3,8,0.4) 100%)",
+              "linear-gradient(to bottom, rgba(2,3,8,0.45) 0%, transparent 32%)",
           }}
         />
 
