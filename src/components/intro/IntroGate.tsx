@@ -2,9 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Volume2, VolumeX } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { EASE_IN_OUT_EXPO, EASE_OUT_EXPO } from "@/lib/motion";
+import {
+  armGateAudio,
+  gateBreach,
+  gateEnter,
+  gateTick,
+  setGateMuted,
+  stopGateAudio,
+} from "@/lib/gateAudio";
 import { cn } from "@/lib/cn";
 
 /**
@@ -19,14 +27,33 @@ import { cn } from "@/lib/cn";
  */
 const BOOT_LINES = [
   "establishing secure channel",
+  "tracing inbound signal …",
   "indexing 12,418 documents",
   "cross-referencing both parties",
   "lifting the redactions",
   "exposing the deep state",
 ];
 
+// "It sees you" — rewrite the trace line with the visitor's own context
+// (timezone-derived city + local time) so the system reads as if it's scanning
+// *them*. Computed client-side and shown back to them only — never sent or
+// logged, consistent with our no-tracking posture.
+function personalizedBootLines(): string[] {
+  const out = [...BOOT_LINES];
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    const city = (tz.split("/").pop() || "").replace(/_/g, " ").toLowerCase();
+    const time = new Date()
+      .toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+      .toLowerCase();
+    if (city) out[1] = `tracing signal ▸ ${city} · ${time}`;
+  } catch {
+    /* Intl/Date unavailable — keep the generic trace line */
+  }
+  return out;
+}
+
 const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&/<>*+=?·";
-const TOTAL_CHARS = BOOT_LINES.reduce((n, l) => n + l.length, 0);
 
 // Headline, split into lines/segments so the decode effect can resolve it
 // character-by-character while preserving the accent styling. Written as the
@@ -47,6 +74,9 @@ type Phase = "typing" | "ready" | "exiting" | "done";
 export function IntroGate() {
   const reduce = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("typing");
+  // The boot lines, personalized on the client after mount (see effect below).
+  // Starts as the static set so SSR and first client render match.
+  const [bootLines, setBootLines] = useState<string[]>(BOOT_LINES);
   const [lines, setLines] = useState<string[]>([]);
   const [activeLine, setActiveLine] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -58,6 +88,8 @@ export function IntroGate() {
   // Returning visitors who already gave an email skip the capture step (the
   // cinematic boot still plays — they just go straight to Enter).
   const [known, setKnown] = useState(false);
+  // Gate sound design (procedural). On by default; persisted per device.
+  const [soundOn, setSoundOn] = useState(true);
   const timers = useRef<Array<ReturnType<typeof setTimeout>>>([]);
   // Guards against re-entry; also lets us run enter()'s side effects outside the
   // setState updater (dispatching there warns about cross-component updates).
@@ -72,6 +104,48 @@ export function IntroGate() {
     }
   }, []);
 
+  // "It sees you": swap in the visitor's real local context once on the client.
+  // Done in an effect (not at render) so it never causes a hydration mismatch.
+  useEffect(() => {
+    setBootLines(personalizedBootLines());
+  }, []);
+
+  // Sound: respect any saved preference, then arm the audio engine on the very
+  // first user gesture (browsers won't let it start before that). The ambient
+  // drone fades in then; ticks / breach / whoosh fire on their cues.
+  useEffect(() => {
+    let on = true;
+    try {
+      on = localStorage.getItem("dsm:sound") !== "0";
+    } catch {
+      /* storage blocked — default to on */
+    }
+    setSoundOn(on);
+    setGateMuted(!on);
+    const arm = () => {
+      if (on) armGateAudio();
+    };
+    window.addEventListener("pointerdown", arm, { once: true });
+    window.addEventListener("keydown", arm, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", arm);
+      window.removeEventListener("keydown", arm);
+      stopGateAudio();
+    };
+  }, []);
+
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    try {
+      localStorage.setItem("dsm:sound", next ? "1" : "0");
+    } catch {
+      /* ignore */
+    }
+    setGateMuted(!next);
+    if (next) armGateAudio(); // this handler is itself a user gesture
+  };
+
   // Decrypt boot sequence — each line scrambles random glyphs, then resolves
   // left-to-right to the real text before the next line begins. Skipped under
   // reduced motion (prompt shows immediately).
@@ -82,6 +156,7 @@ export function IntroGate() {
       return;
     }
 
+    const totalChars = bootLines.reduce((n, l) => n + l.length, 0);
     const out: string[] = [];
     let line = 0;
     let doneChars = 0;
@@ -97,15 +172,18 @@ export function IntroGate() {
         .join("");
 
     const runLine = () => {
-      if (line >= BOOT_LINES.length) {
+      if (line >= bootLines.length) {
         setProgress(100);
         // Arm — hold on 100% for a beat of tension, then breach into the reveal.
         const arm = setTimeout(() => setCharged(true), 220);
-        const breach = setTimeout(() => setPhase("ready"), 760);
+        const breach = setTimeout(() => {
+          gateBreach(); // boom + crack as the lock blows open
+          setPhase("ready");
+        }, 760);
         timers.current.push(arm, breach);
         return;
       }
-      const full = BOOT_LINES[line];
+      const full = bootLines[line];
       setActiveLine(line);
       let frame = 0;
       interval.current = setInterval(() => {
@@ -114,12 +192,13 @@ export function IntroGate() {
         out[line] = scramble(full, resolved);
         setLines([...out]);
         setProgress(
-          Math.round(((doneChars + resolved) / TOTAL_CHARS) * 100),
+          Math.round(((doneChars + resolved) / totalChars) * 100),
         );
         if (resolved >= full.length) {
           if (interval.current) clearInterval(interval.current);
           out[line] = full;
           setLines([...out]);
+          gateTick(); // soft click as the line locks in
           doneChars += full.length;
           line += 1;
           const t = setTimeout(runLine, 190);
@@ -136,7 +215,7 @@ export function IntroGate() {
       timers.current = [];
       if (interval.current) clearInterval(interval.current);
     };
-  }, [reduce]);
+  }, [reduce, bootLines]);
 
   // Lock body scroll while the gate is up.
   useEffect(() => {
@@ -151,6 +230,8 @@ export function IntroGate() {
   const enter = () => {
     if (enteringRef.current) return;
     enteringRef.current = true;
+    gateEnter(); // door whoosh
+    stopGateAudio(); // fade the ambient drone out as we cross in
     // Signal the page (e.g. the coming-soon hero) to animate in as doors open.
     window.__dsmEntered = true;
     window.dispatchEvent(new Event("dsm:enter"));
@@ -316,6 +397,15 @@ export function IntroGate() {
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-500" />
             </span>
             <span className="hidden sm:inline">Secure channel</span>
+            <button
+              type="button"
+              onClick={toggleSound}
+              aria-label={soundOn ? "Mute sound" : "Unmute sound"}
+              aria-pressed={soundOn}
+              className="ml-1 inline-flex items-center text-paper/40 transition-colors hover:text-paper/80"
+            >
+              {soundOn ? <Volume2 size={13} /> : <VolumeX size={13} />}
+            </button>
           </span>
           <span className="tabular-nums text-paper/55">
             <span className="hidden sm:inline">
@@ -345,7 +435,7 @@ export function IntroGate() {
               }
               className="relative font-mono text-left text-[13px] leading-relaxed text-paper/70 sm:text-sm"
             >
-              {BOOT_LINES.map((full, i) => {
+              {bootLines.map((full, i) => {
                 const text = lines[i];
                 const shown = text !== undefined;
                 const resolved = shown && text === full && i < activeLine;
