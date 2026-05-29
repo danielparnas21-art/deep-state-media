@@ -12,7 +12,7 @@
 export const LAUNCHED = false;
 
 /** Routes reachable while !LAUNCHED. Everything else redirects to "/". */
-export const V1_ALLOWED_PATHS = ["/", "/team"] as const;
+export const V1_ALLOWED_PATHS = ["/", "/team", "/press", "/contact"] as const;
 
 /**
  * Next.js generated metadata routes (favicon + social-share cards). These have

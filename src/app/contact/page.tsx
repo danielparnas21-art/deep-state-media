@@ -1,118 +1,53 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Mail, Lock, Briefcase, Megaphone, ArrowRight } from "lucide-react";
-import { Container } from "@/components/ui/Container";
+import { ContactForm } from "@/components/contact/ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Reach Deep State Media — editorial tips, press, partnerships, corrections.",
+    "Reach Deep State Media — tips, press, partnerships. Drop a note and we'll read it.",
 };
-
-const CHANNELS = [
-  {
-    Icon: Lock,
-    label: "Tips & whistleblowers",
-    head: "Send a tip — anonymously",
-    body: "Documents, recordings, screenshots. Name optional. Message required. Encrypted in transit.",
-    cta: { label: "Open tip line", href: "/tip" },
-  },
-  {
-    Icon: Mail,
-    label: "Editorial",
-    head: "editorial@deepstate.media",
-    body: "Story pitches, freelance, source verification, corrections.",
-    cta: { label: "Email editorial", href: "mailto:editorial@deepstate.media" },
-  },
-  {
-    Icon: Megaphone,
-    label: "Press & media",
-    head: "press@deepstate.media",
-    body: "Interview requests, podcast bookings, public-record requests.",
-    cta: { label: "Email press", href: "mailto:press@deepstate.media" },
-  },
-  {
-    Icon: Briefcase,
-    label: "Business & partnerships",
-    head: "ops@deepstate.media",
-    body: "Advertising, partnerships, syndication, hiring.",
-    cta: { label: "Email operations", href: "mailto:ops@deepstate.media" },
-  },
-];
 
 export default function ContactPage() {
   return (
-    <>
-      <section className="relative border-b border-ink-900/10 bg-paper-100 pb-20 pt-40">
-        <Container>
-          <p className="kicker mb-6">The Doorway</p>
-          <h1 className="display-stencil text-hero text-ink-900">
-            We answer.
-            <br />
-            <span className="italic text-navy-600">Pick a door.</span>
-          </h1>
-          <p className="mt-8 max-w-2xl text-deck text-ink-600">
-            We read everything that comes in. We don&rsquo;t respond to
-            everything — but we respond more than most newsrooms do. If you
-            need a guaranteed reply, send a tip.
+    <div className="bg-[#06070d] text-paper">
+      {/* ── Masthead ─────────────────────────────────────────── */}
+      <section className="relative isolate overflow-hidden border-b border-white/10 pb-20 pt-40 sm:pt-44">
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-1/3 left-1/2 h-[60vh] w-[60vh] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.5),transparent_66%)] blur-3xl" />
+          <div
+            className="absolute inset-0 opacity-[0.05]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(120,150,199,0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(120,150,199,0.7) 1px, transparent 1px)",
+              backgroundSize: "80px 80px",
+              maskImage:
+                "radial-gradient(ellipse 90% 70% at 50% 30%, black 40%, transparent 100%)",
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
+          <p className="mb-6 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-navy-200">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />
+            Get in touch
           </p>
-        </Container>
+          <h1 className="display-stencil text-[clamp(2.8rem,8vw,7rem)] leading-[0.98]">
+            Say <span className="accent-signal">something.</span>
+          </h1>
+          <p className="mt-8 max-w-2xl text-deck text-paper/65">
+            Tips, press, partnerships, or just a message — we read everything
+            that comes through. No phone trees, no runaround. Drop a note and the
+            right person sees it.
+          </p>
+        </div>
       </section>
 
-      <section className="py-16">
-        <Container>
-          <ul className="grid gap-6 sm:grid-cols-2">
-            {CHANNELS.map((c) => {
-              const external = c.cta.href.startsWith("mailto:");
-              const Anchor = external
-                ? ({ children, ...rest }: { children: React.ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-                    <a {...rest}>{children}</a>
-                  )
-                : ({ children, ...rest }: { children: React.ReactNode } & React.ComponentProps<typeof Link>) => (
-                    <Link {...rest}>{children}</Link>
-                  );
-              return (
-                <li
-                  key={c.label}
-                  className="group relative overflow-hidden rounded-md border border-ink-900/10 bg-paper p-8 transition-colors hover:border-navy-600/40 hover:shadow-sm"
-                >
-                  <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-full border border-ink-900/15 text-navy-600 transition-colors group-hover:border-navy-600/60 group-hover:bg-navy-50">
-                    <c.Icon size={16} />
-                  </div>
-                  <p className="kicker">{c.label}</p>
-                  <h3 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink-900 break-words">
-                    {c.head}
-                  </h3>
-                  <p className="mt-3 text-ink-500">{c.body}</p>
-                  <Anchor
-                    href={c.cta.href}
-                    className="mt-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-navy-600 hover:text-navy-700"
-                  >
-                    {c.cta.label}
-                    <ArrowRight size={14} />
-                  </Anchor>
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="mt-16 rounded-md border border-dashed border-ink-900/20 bg-paper-100 p-8">
-            <p className="kicker mb-3">Slow lane</p>
-            <h3 className="font-display text-2xl font-semibold tracking-tight text-ink-900">
-              Postal mail
-            </h3>
-            <p className="mt-3 max-w-prose text-ink-500">
-              For court filings, certified documents, and analog tips:
-              <br />
-              <span className="mt-3 inline-block text-[12px] font-semibold uppercase tracking-[0.18em] text-ink-700">
-                Deep State Media · PO Box 0001 · Washington, DC 20001
-                <br />
-                (Replace with the real mailing address before launch.)
-              </span>
-            </p>
-          </div>
-        </Container>
+      {/* ── Form ─────────────────────────────────────────────── */}
+      <section className="py-16 sm:py-20">
+        <div className="mx-auto w-full max-w-[680px] px-6 sm:px-8">
+          <ContactForm />
+        </div>
       </section>
-    </>
+    </div>
   );
 }
