@@ -86,7 +86,12 @@ function MemberRow({ member: m, index }: { member: TeamMember; index: number }) 
   return (
     <article
       id={m.slug}
-      className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,420px)_1fr] lg:gap-16"
+      className={cn(
+        "grid grid-cols-1 items-start gap-10 lg:gap-16",
+        flip
+          ? "lg:grid-cols-[1fr_minmax(0,420px)]"
+          : "lg:grid-cols-[minmax(0,420px)_1fr]",
+      )}
     >
       {/* Portrait */}
       <div
@@ -109,7 +114,7 @@ function MemberRow({ member: m, index }: { member: TeamMember; index: number }) 
       </div>
 
       {/* Bio */}
-      <div className={cn(flip && "lg:order-1")}>
+      <div className={cn("max-w-prose", flip && "lg:order-1 lg:ml-auto")}>
         <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-signal-400">
           {m.role}
         </p>
@@ -122,7 +127,7 @@ function MemberRow({ member: m, index }: { member: TeamMember; index: number }) 
           {m.name}
         </h2>
 
-        <div className="mt-6 max-w-prose space-y-4 text-[15px] leading-relaxed text-paper/65">
+        <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-paper/65">
           {m.bio.split(/\n\n+/).map((para, idx) => (
             <p key={idx}>{para}</p>
           ))}
