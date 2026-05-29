@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight, Lock, LockOpen, Volume2, VolumeX } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { EASE_IN_OUT_EXPO, EASE_OUT_EXPO } from "@/lib/motion";
 import {
@@ -69,6 +69,15 @@ function personalizedBootLines(): string[] {
 }
 
 const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&/<>*+=?·";
+
+// What the email unlocks — shown as locked chips on the gate so the value
+// exchange is unmistakable (and they flip to unlocked on submit).
+const UNLOCKS = [
+  "Meet the Team",
+  "The Podcast",
+  "Campaign Desk",
+  "The Investigations",
+];
 
 // Headline, split into lines/segments so the decode effect can resolve it
 // character-by-character while preserving the accent styling. Written as the
@@ -183,6 +192,8 @@ export function IntroGate() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // Flips the locked "what you unlock" chips open on a successful submit.
+  const [unlocked, setUnlocked] = useState(false);
   // Returning visitors who already gave an email skip the capture step (the
   // cinematic boot still plays — they just go straight to Enter).
   const [known, setKnown] = useState(false);
@@ -380,8 +391,8 @@ export function IntroGate() {
     timers.current.forEach(clearTimeout);
     timers.current = [];
     if (interval.current) clearInterval(interval.current);
-    setLines([...BOOT_LINES]);
-    setActiveLine(BOOT_LINES.length);
+    setLines([...bootLines]);
+    setActiveLine(bootLines.length);
     setProgress(100);
     setPhase("ready");
   };
@@ -421,7 +432,11 @@ export function IntroGate() {
       // Network/infra hiccup — don't trap the visitor at the gate. We let them
       // in without marking them subscribed, so they're asked again next visit.
     }
-    enter();
+    // Flip the locked chips open as a reward beat, then breach in.
+    setUnlocked(true);
+    gateStab();
+    const t = setTimeout(enter, 750);
+    timers.current.push(t);
   };
 
   if (phase === "done") return null;
@@ -683,9 +698,8 @@ export function IntroGate() {
                   </>
                 ) : (
                   <>
-                    Drop your email to get in first — the podcast, the campaign
-                    trail, and the investigations both parties would rather keep
-                    buried.
+                    One email is your clearance. Everything inside stays locked
+                    until you&rsquo;re on the list.
                   </>
                 )}
               </motion.p>
@@ -756,6 +770,48 @@ export function IntroGate() {
                   >
                     {emailError ?? ""}
                   </p>
+
+                  {/* What the email unlocks — locked until they're on the list,
+                      then flips open on submit. */}
+                  <div className="mt-6 w-full">
+                    <p className="mb-2.5 text-[10px] uppercase tracking-[0.24em] text-paper/35">
+                      Your email unlocks
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {UNLOCKS.map((label, i) => (
+                        <motion.div
+                          key={label}
+                          initial={false}
+                          animate={
+                            unlocked
+                              ? { scale: [1, 1.05, 1] }
+                              : { scale: 1 }
+                          }
+                          transition={{
+                            delay: unlocked ? i * 0.08 : 0,
+                            duration: 0.4,
+                            ease: EASE_OUT_EXPO,
+                          }}
+                          className={cn(
+                            "flex items-center gap-2 rounded-md border px-3 py-2 text-[10px] uppercase tracking-[0.12em] transition-colors duration-300 sm:text-[11px]",
+                            unlocked
+                              ? "border-signal-500/60 text-paper/85"
+                              : "border-white/12 text-paper/45",
+                          )}
+                        >
+                          {unlocked ? (
+                            <LockOpen
+                              size={12}
+                              className="shrink-0 text-signal-400"
+                            />
+                          ) : (
+                            <Lock size={12} className="shrink-0 text-paper/35" />
+                          )}
+                          <span className="truncate">{label}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
                 </motion.div>
               )}
             </motion.div>

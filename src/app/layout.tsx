@@ -51,7 +51,9 @@ const mono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#FBFAF6",
+  // Dark to match the V1 teaser so mobile browser chrome blends in. Flip back
+  // to the paper tone (#FBFAF6) when the full light site launches.
+  themeColor: "#06070d",
   width: "device-width",
   initialScale: 1,
 };
@@ -78,7 +80,6 @@ export const metadata: Metadata = {
     description:
       "Independent investigative journalism on the people who actually run things.",
   },
-  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
