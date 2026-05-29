@@ -66,7 +66,7 @@ export function JoinMovement() {
             >
               One email a week. The leads we&rsquo;re chasing, the documents we
               just pulled, the names we&rsquo;re about to name. No spam, no
-              party line.
+              spin.
             </motion.p>
           </div>
 

@@ -34,7 +34,7 @@ export function V1Footer() {
 
         <div className="mt-12 flex flex-col gap-3 pt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-paper/35 sm:flex-row sm:items-center sm:justify-between">
           <span>© {year} Deep State Media</span>
-          <span>Independent · Both sides · No party line</span>
+          <span>Independent · Both sides · No spin</span>
         </div>
       </div>
     </footer>

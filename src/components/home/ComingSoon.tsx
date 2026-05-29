@@ -324,9 +324,9 @@ export function ComingSoon() {
                 aisle, name names, and attach the receipt to every claim.
               </p>
               <p className="text-paper">
-                Bold in style. Rigorous in facts. No party line, no sacred cows.
-                That&rsquo;s the standard we hold every story to. Now we go to
-                work.
+                Bold in style. Rigorous in facts. No allegiances, no sacred
+                cows. That&rsquo;s the standard we hold every story to. Now we go
+                to work.
               </p>
             </div>
           </div>
@@ -378,7 +378,7 @@ export function ComingSoon() {
               Get on the list and we&rsquo;ll bring it straight to your inbox —
               the podcast, the campaign desk, and every investigation as it
               breaks. The leads we&rsquo;re chasing and the names we&rsquo;re
-              about to name. No spam, no party line.
+              about to name. No spam, no spin.
             </p>
 
             <div className="mt-12 flex w-full flex-col items-center">

@@ -43,7 +43,7 @@ export function NewsletterCTA() {
             <p className="mt-6 max-w-prose text-ink-600">
               Saturdays. Five minutes. The leads we&rsquo;re chasing, the
               documents we just FOIA&rsquo;d, the names we&rsquo;re about to
-              name. No spam. No party line.
+              name. No spam. No spin.
             </p>
           </div>
           <div>
