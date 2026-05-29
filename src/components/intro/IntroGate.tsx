@@ -756,15 +756,6 @@ export function IntroGate() {
                   >
                     {emailError ?? ""}
                   </p>
-
-                  {/* Very soft skip — easy to miss, but there for the wary. */}
-                  <button
-                    type="button"
-                    onClick={enter}
-                    className="mt-1 text-[10px] lowercase tracking-[0.15em] text-paper/25 transition-colors hover:text-paper/45"
-                  >
-                    skip for now
-                  </button>
                 </motion.div>
               )}
             </motion.div>
