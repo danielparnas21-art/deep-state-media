@@ -116,12 +116,12 @@ export function ComingSoon() {
   const state = revealed ? "visible" : "hidden";
 
   return (
-    <>
+    <div className="relative isolate bg-[#06070d]/65">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section
         ref={ref}
         aria-label="Deep State Media — coming soon"
-        className="relative isolate flex min-h-[80svh] flex-col justify-center overflow-hidden bg-[#06070d]/65 pb-20 pt-32 text-paper"
+        className="relative isolate flex min-h-[80svh] flex-col justify-center overflow-hidden pb-20 pt-32 text-paper"
       >
         <motion.div
           aria-hidden
@@ -174,7 +174,7 @@ export function ComingSoon() {
           className="pointer-events-none absolute inset-0 z-[1]"
           style={{
             background:
-              "radial-gradient(ellipse 78% 62% at 50% 42%, transparent 52%, rgba(2,3,8,0.72) 100%)",
+              "radial-gradient(ellipse 92% 78% at 50% 42%, transparent 62%, rgba(2,3,8,0.4) 100%)",
           }}
         />
 
@@ -314,7 +314,7 @@ export function ComingSoon() {
       {/* ── Our story / manifesto ────────────────────────────── */}
       <section
         aria-labelledby="story-heading"
-        className="relative isolate overflow-hidden bg-[#06070d]/65 py-20 text-paper sm:py-24"
+        className="relative isolate overflow-hidden py-20 text-paper sm:py-24"
       >
         <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
@@ -351,7 +351,7 @@ export function ComingSoon() {
       {/* ── What's coming ────────────────────────────────────── */}
       <section
         aria-labelledby="coming-heading"
-        className="relative isolate overflow-hidden bg-[#06070d]/65 py-20 text-paper sm:py-24"
+        className="relative isolate overflow-hidden py-20 text-paper sm:py-24"
       >
         <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
           <div className="mx-auto mb-14 flex max-w-3xl flex-col items-center text-center">
@@ -377,7 +377,7 @@ export function ComingSoon() {
       <section
         id="waitlist"
         aria-labelledby="waitlist-heading"
-        className="relative isolate scroll-mt-24 overflow-hidden bg-[#06070d]/65 pb-12 pt-20 text-paper sm:pb-20 sm:pt-24"
+        className="relative isolate scroll-mt-24 overflow-hidden pb-12 pt-20 text-paper sm:pb-20 sm:pt-24"
       >
         <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
@@ -413,7 +413,7 @@ export function ComingSoon() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
