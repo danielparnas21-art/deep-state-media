@@ -838,7 +838,7 @@ function DataStream() {
   return (
     <div className="absolute bottom-7 left-6 hidden max-w-[46vw] font-mono text-[10px] leading-relaxed text-paper/30 sm:left-10 sm:block">
       <div className="mb-1.5 flex items-center gap-3 uppercase tracking-[0.18em] text-paper/45">
-        <span className="text-signal-400">// declassifying</span>
+        <span className="text-signal-400">{"// declassifying"}</span>
         <span className="tabular-nums">files {files.toLocaleString()}</span>
         <span className="tabular-nums">sources {sources}/16</span>
       </div>
