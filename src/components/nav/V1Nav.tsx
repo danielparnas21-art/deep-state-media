@@ -9,9 +9,9 @@ import { Wordmark } from "@/components/ui/Wordmark";
 import { cn } from "@/lib/cn";
 
 /**
- * Minimal dark chrome for the V1 teaser. Just the wordmark and a single way
- * forward — Meet the Team. Transparent over the hero, gaining a quiet backdrop
- * once you scroll. (The full multi-link Nav returns with V2.)
+ * Minimal dark chrome for the V1 teaser — wordmark plus the few places worth
+ * going: Press, Contact, and the Meet the Team CTA. Transparent over the hero,
+ * gaining a quiet backdrop once you scroll. (The full Nav returns with V2.)
  */
 export function V1Nav() {
   const pathname = usePathname();
@@ -44,26 +44,51 @@ export function V1Nav() {
           <Wordmark variant="inline" />
         </Link>
 
-        {onTeam ? (
+        <div className="flex items-center gap-3 sm:gap-6">
           <Link
-            href="/"
-            className="group inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-paper/70 transition-colors hover:text-paper"
+            href="/press"
+            className={cn(
+              "text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors sm:text-[11px] sm:tracking-[0.2em]",
+              pathname === "/press"
+                ? "text-paper"
+                : "text-paper/55 hover:text-paper",
+            )}
           >
-            <ArrowRight size={14} className="rotate-180" />
-            Back
+            Press
           </Link>
-        ) : (
           <Link
-            href="/team"
-            className="group inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-signal-500 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-signal-600 sm:px-5 sm:tracking-[0.18em]"
+            href="/contact"
+            className={cn(
+              "text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors sm:text-[11px] sm:tracking-[0.2em]",
+              pathname === "/contact"
+                ? "text-paper"
+                : "text-paper/55 hover:text-paper",
+            )}
           >
-            Meet the team
-            <ArrowRight
-              size={14}
-              className="transition-transform group-hover:translate-x-0.5"
-            />
+            Contact
           </Link>
-        )}
+          {onTeam ? (
+            <Link
+              href="/"
+              className="group inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-paper/70 transition-colors hover:text-paper sm:text-[11px] sm:tracking-[0.18em]"
+            >
+              <ArrowRight size={13} className="rotate-180" />
+              Back
+            </Link>
+          ) : (
+            <Link
+              href="/team"
+              className="group inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-signal-500 px-2.5 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-signal-600 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-[11px] sm:tracking-[0.18em]"
+            >
+              <span className="sm:hidden">Team</span>
+              <span className="hidden sm:inline">Meet the team</span>
+              <ArrowRight
+                size={13}
+                className="transition-transform group-hover:translate-x-0.5"
+              />
+            </Link>
+          )}
+        </div>
       </nav>
     </motion.header>
   );
