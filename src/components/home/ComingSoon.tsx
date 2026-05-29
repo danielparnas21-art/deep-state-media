@@ -121,7 +121,7 @@ export function ComingSoon() {
       <section
         ref={ref}
         aria-label="Deep State Media — coming soon"
-        className="relative isolate flex min-h-[80svh] flex-col justify-center overflow-hidden pb-20 pt-32 text-paper"
+        className="relative isolate flex min-h-[80svh] flex-col justify-center overflow-x-clip pb-20 pt-32 text-paper"
       >
         <motion.div
           aria-hidden
