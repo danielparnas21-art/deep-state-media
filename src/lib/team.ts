@@ -29,7 +29,7 @@ export type TeamMember = {
 
 /**
  * Order is intentional: Lev (central figure) → David (co-founder, ops) →
- * Daniel (co-founder, social) → Jonathan (contributing reporter).
+ * Daniel (co-founder, social) → Jonathan (publicist / PR).
  *
  * Editorial sourcing note: every factual claim here is sourced and linked in
  * the member's `quote.source` or via the page's footer credits. Update with
@@ -106,10 +106,10 @@ export const TEAM: TeamMember[] = [
   {
     slug: "jonathan-hay",
     name: "Jonathan Hay",
-    role: "Publicist · Contributing reporter",
+    role: "Publicist · PR",
     roleSub: "Celebrity publicist · Music producer · Crisis-media strategist · Survivor advocate",
     bio:
-      "Jonathan Hay is a renowned celebrity publicist and music producer who has reshaped the entertainment industry with two decades of innovative publicity campaigns — 20+ years on the inside, 1,000+ media placements, 100+ high-profile clients. His work spans iconic names: he wrote Rihanna’s first press release for “Pon de Replay” and orchestrated the publicity stunt that helped vault her to worldwide attention, promoted Whitney Houston’s $100M Arista recording contract and her #1 final album “I Look to You,” and collaborated with multi-platinum post-grunge band Days of the New on “Touch, Peel and Stand,” which topped modern rock charts for 17 weeks and was later named Billboard’s Greatest of All-Time Mainstream Rock Song.\n\nHay is recognized by The New York Times, Fox News, Marie Claire, Rolling Stone, and Billboard as a crisis-media expert. He specializes in elevating celebrities and public figures through strategic media placements, elite brand partnerships, and access to top-tier financial media — and in protecting their reputations when the story turns against them.\n\nIn October 2025 he publicly came forward as the John Doe plaintiff in a sexual-assault lawsuit against Sean “Diddy” Combs — using his name, in his words, “to push for criminal charges” and to give other survivors a voice. He brings that lens — the music industry, abuse of power, the long road to accountability, and the institutions that protect predators — to Deep State Media’s reporting.",
+      "Jonathan Hay is a renowned celebrity publicist and music producer who has reshaped the entertainment industry with two decades of innovative publicity campaigns — 20+ years on the inside, 1,000+ media placements, 100+ high-profile clients. His work spans iconic names: he wrote Rihanna’s first press release for “Pon de Replay” and orchestrated the publicity stunt that helped vault her to worldwide attention, promoted Whitney Houston’s $100M Arista recording contract and her #1 final album “I Look to You,” and collaborated with multi-platinum post-grunge band Days of the New on “Touch, Peel and Stand,” which topped modern rock charts for 17 weeks and was later named Billboard’s Greatest of All-Time Mainstream Rock Song.\n\nHay is recognized by The New York Times, Fox News, Marie Claire, Rolling Stone, and Billboard as a crisis-media expert. He specializes in elevating celebrities and public figures through strategic media placements, elite brand partnerships, and access to top-tier financial media — and in protecting their reputations when the story turns against them.\n\nIn October 2025 he publicly came forward as the John Doe plaintiff in a sexual-assault lawsuit against Sean “Diddy” Combs — using his name, in his words, “to push for criminal charges” and to give other survivors a voice. He brings that lens — the music industry, abuse of power, the long road to accountability, and the institutions that protect predators — to the press and publicity strategy behind Deep State Media.",
     quote: {
       text: "It’s about pushing for criminal charges. I want all Diddy’s victims to have justice. For me, it was the right thing to do. Having a voice is important.",
       cite: "Jonathan Hay, Shockya exclusive · October 17, 2025",

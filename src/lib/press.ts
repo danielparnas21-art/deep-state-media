@@ -37,7 +37,7 @@ export const PRESS: PressItem[] = [
     date: "2025-10-17",
     url: "https://www.shockya.com/news/2025/10/17/exclusive-jonathan-hay-reveals-self-as-john-doe-in-sean-diddy-combs-biggie-lawsuit/",
     excerpt:
-      "Deep State Media contributing reporter Jonathan Hay steps forward publicly to push for accountability.",
+      "Deep State Media publicist Jonathan Hay steps forward publicly to push for accountability.",
   },
   {
     outlet: "WVXU · NPR",
