@@ -7,6 +7,7 @@ import { V1Nav } from "@/components/nav/V1Nav";
 import { V1Footer } from "@/components/footer/V1Footer";
 import { CodeRain } from "@/components/home/CodeRain";
 import { PageTransition } from "@/components/motion/PageTransition";
+import { RouteDecrypt } from "@/components/motion/RouteDecrypt";
 import { TopTicker } from "@/components/home/TopTicker";
 import { IntroGate } from "@/components/intro/IntroGate";
 import { LAUNCHED } from "@/lib/launch";
@@ -111,6 +112,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
         </PageTransition>
         {LAUNCHED ? <Footer /> : <V1Footer />}
+        {!LAUNCHED && <RouteDecrypt />}
         <IntroGate />
         <Analytics />
       </body>
