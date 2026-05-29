@@ -141,6 +141,27 @@ export function gateTick(): void {
   o.stop(now + 0.08);
 }
 
+/** Sharp accent the instant "deep state" snaps into focus, before the breach. */
+export function gateStab(): void {
+  const c = ctx;
+  if (!c || !master || muted) return;
+  const now = c.currentTime;
+  const g = c.createGain();
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.3, now + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+  const o = c.createOscillator();
+  o.type = "sawtooth";
+  o.frequency.setValueAtTime(520, now);
+  o.frequency.exponentialRampToValueAtTime(180, now + 0.3);
+  const lp = c.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 2600;
+  o.connect(lp).connect(g).connect(master);
+  o.start(now);
+  o.stop(now + 0.42);
+}
+
 /** The breach — a low boom + filtered crack as the lock blows open. */
 export function gateBreach(): void {
   const c = ctx;

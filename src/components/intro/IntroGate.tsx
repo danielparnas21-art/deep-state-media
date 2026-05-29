@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Volume2, VolumeX } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
@@ -9,6 +9,7 @@ import {
   armGateAudio,
   gateBreach,
   gateEnter,
+  gateStab,
   gateTick,
   setGateMuted,
   stopGateAudio,
@@ -84,6 +85,37 @@ declare global {
 }
 
 type Phase = "idle" | "typing" | "ready" | "exiting" | "done";
+
+/**
+ * Render a boot line. The payoff line's "deep state" snaps into focus in bold
+ * signal-red with a scale-pop + glow the instant it resolves — the "whoa" beat
+ * right before the breach. Other lines render plainly (dots until they arrive).
+ */
+function renderBootLine(text: string | undefined, full: string): ReactNode {
+  if (text === undefined) return full.replace(/./g, "·");
+  const idx = full.toLowerCase().indexOf("deep state");
+  if (text === full && idx >= 0) {
+    return (
+      <>
+        {full.slice(0, idx)}
+        <motion.span
+          initial={{ scale: 1.55, opacity: 0, filter: "brightness(2.4)" }}
+          animate={{ scale: 1, opacity: 1, filter: "brightness(1)" }}
+          transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
+          className="inline-block font-bold uppercase tracking-wide text-signal-400"
+          style={{
+            textShadow:
+              "0 0 22px rgba(200,57,42,0.9), 0 0 5px rgba(255,255,255,0.55)",
+          }}
+        >
+          {full.slice(idx, idx + "deep state".length)}
+        </motion.span>
+        {full.slice(idx + "deep state".length)}
+      </>
+    );
+  }
+  return text;
+}
 
 export function IntroGate() {
   const reduce = useReducedMotion();
@@ -238,7 +270,9 @@ export function IntroGate() {
           if (interval.current) clearInterval(interval.current);
           out[line] = full;
           setLines([...out]);
-          gateTick(); // soft click as the line locks in
+          // The payoff line gets a sharp accent; the rest get a soft click.
+          if (full.toLowerCase().includes("deep state")) gateStab();
+          else gateTick();
           doneChars += full.length;
           line += 1;
           const t = setTimeout(runLine, 190);
@@ -540,7 +574,7 @@ export function IntroGate() {
                       {resolved ? "✓" : "»"}
                     </span>
                     <span className={resolved ? "text-paper/55" : "text-paper"}>
-                      {shown ? text : full.replace(/./g, "·")}
+                      {renderBootLine(text, full)}
                     </span>
                     {i === activeLine && (
                       <span className="ml-0.5 inline-block h-3.5 w-1.5 translate-y-px animate-pulse bg-signal-400 align-middle" />
