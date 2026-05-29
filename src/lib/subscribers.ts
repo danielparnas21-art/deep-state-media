@@ -39,15 +39,25 @@ async function kvCommand(
   creds: { url: string; token: string },
   command: string[],
 ): Promise<unknown> {
-  const res = await fetch(creds.url, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${creds.token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(command),
-    cache: "no-store",
-  });
+  // Bound every KV call so a stalled storage request can't hang the whole
+  // route (which would leave the visitor stuck on "Unlocking…").
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4000);
+  let res: Response;
+  try {
+    res = await fetch(creds.url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${creds.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(command),
+      cache: "no-store",
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
   if (!res.ok) throw new Error(`KV ${command[0]} failed: ${res.status}`);
   const data = (await res.json()) as { result?: unknown };
   return data.result;

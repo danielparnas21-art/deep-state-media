@@ -410,11 +410,22 @@ export function IntroGate() {
     setEmailError(null);
     setSubmitting(true);
     try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: value, source: "intro-gate" }),
-      });
+      // Never let a slow or blocked request trap the visitor on "Unlocking…":
+      // abort after a few seconds and fall through to entry. The server still
+      // finishes the save on its end, so the email isn't lost.
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      let res: Response;
+      try {
+        res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: value, source: "intro-gate" }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
       if (res.status === 400) {
         const data = await res.json().catch(() => ({}));
         setEmailError(data.error ?? "Enter a valid email to continue.");
