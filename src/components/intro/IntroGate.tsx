@@ -136,14 +136,28 @@ export function IntroGate() {
     }
     setSoundOn(on);
     setGateMuted(!on);
+    // Browsers won't let audio start until the visitor interacts at least once.
+    // Listen for the broadest possible set of first-interactions so sound kicks
+    // in the instant they do *anything* — a scroll, swipe, move, tap, or key —
+    // not only on a deliberate tap.
+    const events = [
+      "pointerdown",
+      "touchstart",
+      "mousedown",
+      "keydown",
+      "wheel",
+      "scroll",
+      "mousemove",
+    ];
     const arm = () => {
       if (on) armGateAudio();
+      events.forEach((e) => window.removeEventListener(e, arm));
     };
-    window.addEventListener("pointerdown", arm, { once: true });
-    window.addEventListener("keydown", arm, { once: true });
+    events.forEach((e) =>
+      window.addEventListener(e, arm, { passive: true }),
+    );
     return () => {
-      window.removeEventListener("pointerdown", arm);
-      window.removeEventListener("keydown", arm);
+      events.forEach((e) => window.removeEventListener(e, arm));
       stopGateAudio();
     };
   }, []);
