@@ -97,9 +97,10 @@ function noiseBurst(
   vol: number,
   freq: number,
   sweepUp: boolean,
+  startAt?: number,
 ): void {
   if (!master) return;
-  const now = c.currentTime;
+  const now = startAt ?? c.currentTime;
   const buffer = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate);
   const data = buffer.getChannelData(0);
   for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
@@ -141,26 +142,29 @@ export function gateTick(): void {
   o.stop(now + 0.08);
 }
 
-/** Impact hit the instant "deep state" slams into focus, before the breach. A
- *  short mid sine punch (body) plus a bright noise crack (snap) — a clean hit,
- *  not a buzz. */
+/** Digital glitch zap the instant "deep state" tears into the open, before the
+ *  breach: a rapid stutter of bright noise micro-bursts plus a square blip
+ *  cracking downward. */
 export function gateStab(): void {
   const c = ctx;
   if (!c || !master || muted) return;
   const now = c.currentTime;
-  const pg = c.createGain();
-  pg.gain.setValueAtTime(0.0001, now);
-  pg.gain.exponentialRampToValueAtTime(0.42, now + 0.006);
-  pg.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-  const po = c.createOscillator();
-  po.type = "sine";
-  po.frequency.setValueAtTime(320, now);
-  po.frequency.exponentialRampToValueAtTime(105, now + 0.2);
-  po.connect(pg).connect(master);
-  po.start(now);
-  po.stop(now + 0.32);
-  // Bright transient crack on top for the snap.
-  noiseBurst(c, 0.12, 0.28, 2800, false);
+  // Stutter: rapid bright noise micro-bursts at jumping frequencies.
+  [0, 0.028, 0.052, 0.078, 0.1].forEach((t) =>
+    noiseBurst(c, 0.022, 0.2, 1800 + Math.random() * 2400, false, now + t),
+  );
+  // Zap: a high square blip cracking down.
+  const g = c.createGain();
+  g.gain.setValueAtTime(0.0001, now);
+  g.gain.exponentialRampToValueAtTime(0.22, now + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+  const o = c.createOscillator();
+  o.type = "square";
+  o.frequency.setValueAtTime(1200, now);
+  o.frequency.exponentialRampToValueAtTime(220, now + 0.14);
+  o.connect(g).connect(master);
+  o.start(now);
+  o.stop(now + 0.2);
 }
 
 /** The breach — a low boom + filtered crack as the lock blows open. */

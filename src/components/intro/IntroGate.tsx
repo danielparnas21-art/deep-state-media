@@ -87,9 +87,72 @@ declare global {
 type Phase = "idle" | "typing" | "ready" | "exiting" | "done";
 
 /**
- * Render a boot line. The payoff line's "deep state" snaps into focus in bold
- * signal-red with a scale-pop + glow the instant it resolves — the "whoa" beat
- * right before the breach. Other lines render plainly (dots until they arrive).
+ * "deep state" reveal: the word sits under a black redaction bar that glitch-
+ * wipes away left-to-right in stuttered steps to expose it in signal-red, with
+ * RGB-split (red/cyan) ghosts tearing as it resolves — "lifting the redaction"
+ * made literal, the "whoa" beat right before the breach.
+ */
+function DeepStateReveal({ label }: { label: string }) {
+  const ghost = {
+    initial: { opacity: 0 },
+    transition: { duration: 0.55, times: [0, 0.35, 0.7, 1], ease: "easeOut" },
+  } as const;
+  return (
+    <span className="relative mx-0.5 inline-block whitespace-nowrap font-bold uppercase tracking-wider">
+      <span
+        className="text-signal-400"
+        style={{ textShadow: "0 0 20px rgba(200,57,42,0.9)" }}
+      >
+        {label}
+      </span>
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 text-[#3fe0ef]"
+        style={{ mixBlendMode: "screen" }}
+        initial={ghost.initial}
+        animate={{ x: [-4, 4, -2, 0], opacity: [0, 0.85, 0.4, 0] }}
+        transition={ghost.transition}
+      >
+        {label}
+      </motion.span>
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 text-signal-500"
+        style={{ mixBlendMode: "screen" }}
+        initial={ghost.initial}
+        animate={{ x: [4, -4, 2, 0], opacity: [0, 0.85, 0.4, 0] }}
+        transition={ghost.transition}
+      >
+        {label}
+      </motion.span>
+      <motion.span
+        aria-hidden
+        className="absolute inset-0 bg-black"
+        initial={{ clipPath: "inset(0 0% 0 0)" }}
+        animate={{
+          clipPath: [
+            "inset(0 0% 0 0)",
+            "inset(0 0% 0 0)",
+            "inset(0 38% 0 0)",
+            "inset(0 38% 0 0)",
+            "inset(0 72% 0 0)",
+            "inset(0 100% 0 0)",
+          ],
+        }}
+        transition={{
+          duration: 0.5,
+          times: [0, 0.15, 0.32, 0.5, 0.7, 1],
+          ease: "easeInOut",
+        }}
+      />
+    </span>
+  );
+}
+
+/**
+ * Render a boot line. The payoff line's "deep state" gets the redaction-wipe
+ * reveal the instant it resolves; other lines render plainly (dots until they
+ * arrive).
  */
 function renderBootLine(text: string | undefined, full: string): ReactNode {
   if (text === undefined) return full.replace(/./g, "·");
@@ -98,18 +161,7 @@ function renderBootLine(text: string | undefined, full: string): ReactNode {
     return (
       <>
         {full.slice(0, idx)}
-        <motion.span
-          initial={{ scale: 0.4, opacity: 0 }}
-          animate={{ scale: [0.4, 1.18, 1], opacity: 1 }}
-          transition={{ duration: 0.5, ease: EASE_OUT_EXPO, times: [0, 0.62, 1] }}
-          className="mx-0.5 inline-block rounded-[3px] bg-signal-500 px-1.5 py-0.5 font-bold uppercase tracking-wider text-white"
-          style={{
-            boxShadow:
-              "0 0 30px rgba(200,57,42,0.95), 0 0 64px rgba(200,57,42,0.4)",
-          }}
-        >
-          {full.slice(idx, idx + "deep state".length)}
-        </motion.span>
+        <DeepStateReveal label={full.slice(idx, idx + "deep state".length)} />
         {full.slice(idx + "deep state".length)}
       </>
     );
