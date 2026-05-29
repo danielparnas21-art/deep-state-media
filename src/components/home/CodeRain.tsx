@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { useReducedMotion } from "framer-motion";
 
 /**
  * Full-viewport "decryption portal" backdrop for the V1 homepage — columns of
@@ -13,9 +12,11 @@ import { useReducedMotion } from "framer-motion";
  *
  * Mounted as a layout sibling of <PageTransition> (never a descendant) so the
  * route-transition transform can't turn its `position: fixed` into a scroll-
- * away absolute box. Homepage-only via pathname. Reduced motion paints one
- * static, dim frame and attaches no listeners. Throttled to ~32fps, DPR capped
- * at 2, paused while the tab is hidden.
+ * away absolute box. Homepage-only via pathname. This signature ambient layer
+ * deliberately animates for everyone — including OS "reduce motion" — since it's
+ * a slow background texture, not a vestibular trigger; the expensive bits (bloom,
+ * DPR) are still trimmed on touch devices. Throttled to ~32fps, DPR capped at 2,
+ * paused while the tab is hidden.
  */
 
 const BG = "#06070d";
@@ -54,7 +55,6 @@ function mix(a: [number, number, number], b: [number, number, number], t: number
 
 export function CodeRain() {
   const pathname = usePathname();
-  const reduce = useReducedMotion();
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -152,33 +152,6 @@ export function CodeRain() {
       }
     };
 
-    // ── Reduced motion: one quiet, static frame, no listeners. ──
-    const paintStatic = () => {
-      ctx.fillStyle = BG;
-      ctx.fillRect(0, 0, w, h);
-      const rows = Math.ceil(h / FONT);
-      for (const c of cols) {
-        for (let r = 0; r < rows; r++) {
-          if (Math.random() > 0.86) {
-            ctx.fillStyle = rgb(NAVY, 0.1 + Math.random() * 0.16);
-            ctx.fillText(pickGlyph(), c.x, r * FONT);
-          }
-        }
-      }
-    };
-
-    if (reduce) {
-      build();
-      paintStatic();
-      const onResizeStatic = () => {
-        if (window.innerWidth === lastW) return; // ignore mobile URL-bar resizes
-        build();
-        paintStatic();
-      };
-      window.addEventListener("resize", onResizeStatic);
-      return () => window.removeEventListener("resize", onResizeStatic);
-    }
-
     let raf = 0;
     let last = 0;
     const interval = 1000 / 32;
@@ -220,7 +193,7 @@ export function CodeRain() {
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [pathname, reduce]);
+  }, [pathname]);
 
   if (pathname !== "/") return null;
 

@@ -352,20 +352,6 @@ export function ComingSoon() {
         aria-labelledby="waitlist-heading"
         className="relative isolate scroll-mt-24 overflow-hidden bg-[#06070d]/65 py-28 text-paper sm:py-32"
       >
-        <motion.div
-          aria-hidden
-          animate={
-            calm ? undefined : { backgroundPosition: ["0% 0%", "100% 100%"] }
-          }
-          transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            backgroundImage:
-              "radial-gradient(680px 420px at 88% 95%, rgba(200,57,42,0.14), transparent 62%)",
-            backgroundSize: "200% 200%",
-          }}
-        />
-
         <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
           <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
             <Eyebrow className="mb-6">Be first in</Eyebrow>
