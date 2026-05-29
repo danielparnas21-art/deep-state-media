@@ -284,7 +284,7 @@ export function ComingSoon() {
           transition={{ delay: 1, duration: 0.8 }}
           className="absolute inset-x-0 bottom-8 z-10 mx-auto flex w-full max-w-[1480px] flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-paper/35 sm:px-8 lg:px-12"
         >
-          <span>Independent — no party line</span>
+          <span>Corruption on both sides</span>
           <span className="flex items-center gap-2">
             Scroll
             <motion.span
