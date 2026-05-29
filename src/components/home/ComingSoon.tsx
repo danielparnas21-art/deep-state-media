@@ -249,7 +249,7 @@ export function ComingSoon() {
             And it was never theirs. Both parties lie, the press covers for its
             own, and the real money still moves in rooms with no cameras.{" "}
             <span className="text-paper">
-              We name names. We bring the receipt. We&rsquo;re building it now.
+              We name names. We bring the receipts. We&rsquo;re building it now.
             </span>
           </motion.p>
 
