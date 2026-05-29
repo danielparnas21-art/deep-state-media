@@ -17,6 +17,13 @@ import { usePathname } from "next/navigation";
  * a slow background texture, not a vestibular trigger; the expensive bits (bloom,
  * DPR) are still trimmed on touch devices. Throttled to ~32fps, DPR capped at 2,
  * paused while the tab is hidden.
+ *
+ * Hardened to never glitch on mobile or desktop: width-only rebuilds (ignoring
+ * the mobile URL-bar resize storm), a single rAF loop that can never stack,
+ * recovery from a lost GPU context and from bfcache (back/forward) restores,
+ * a guard against bogus 0-size frames, and an adaptive latch that retires the
+ * bloom if a device can't hold framerate — so the field stays smooth no matter
+ * what.
  */
 
 const BG = "#06070d";
@@ -67,7 +74,16 @@ export function CodeRain() {
     const HEAD = mix(NAVY, WHITE, 0.55); // luminous leading glyph for navy streams
     // Touch / small screens: drop the per-glyph bloom (shadowBlur is the most
     // expensive canvas op) and cap DPR, so the field stays smooth on phones.
-    const lite = window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
+    // Re-evaluated on every (re)build so rotating or resizing across the
+    // breakpoint adapts instead of staying stuck at the mount-time value.
+    const isLite = () =>
+      window.matchMedia("(max-width: 820px), (pointer: coarse)").matches;
+    let lite = isLite();
+    // Adaptive quality: if a non-lite device still can't hold the framerate
+    // (weak/integrated GPU), retire the bloom for good. Latched so it never
+    // oscillates between quality levels (which would itself read as a glitch).
+    let degraded = false;
+    let slow = 0;
     let w = 0;
     let h = 0;
     let lastW = window.innerWidth;
@@ -79,12 +95,18 @@ export function CodeRain() {
     };
 
     const build = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // Bail on bogus dimensions (some mobile transition states momentarily
+      // report 0) and keep the last good frame rather than blanking the canvas.
+      if (vw <= 0 || vh <= 0) return;
+      lite = isLite();
       const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
-      w = window.innerWidth;
-      lastW = w;
+      w = vw;
+      lastW = vw;
       // Pad the height so the canvas still covers the screen when a mobile URL
       // bar collapses and grows the viewport — without forcing a rebuild.
-      h = window.innerHeight + 140;
+      h = vh + 140;
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       canvas.style.width = `${w}px`;
@@ -141,7 +163,7 @@ export function CodeRain() {
         const alpha = c.kind === 0 ? Math.min(1, c.alpha + 0.22) : c.alpha;
         const bloom = c.kind !== 0;
 
-        const glow = bloom && !lite;
+        const glow = bloom && !lite && !degraded;
         if (glow) {
           ctx.shadowColor = rgb(color, 0.85);
           ctx.shadowBlur = c.kind === 2 ? 9 : 6;
@@ -158,10 +180,31 @@ export function CodeRain() {
 
     const loop = (t: number) => {
       raf = requestAnimationFrame(loop);
-      if (t - last < interval) return;
+      const delta = t - last;
+      if (delta < interval) return;
       last = t;
       step();
+      // Watch real frame spacing (which reflects GPU compositing of the bloom,
+      // not just JS time). A sustained streak below ~13fps on a non-lite device
+      // trips the latch; huge deltas (tab stalls / bfcache) are ignored.
+      if (!degraded && !lite) {
+        if (delta > interval * 2.5 && delta < 1000) {
+          if (++slow >= 12) degraded = true;
+        } else {
+          slow = 0;
+        }
+      }
     };
+
+    // Single source of truth for (re)starting the loop. Always cancels first so
+    // visibility / pageshow / context-restore can never stack two rAF chains
+    // (which would double the speed and read as a glitch).
+    const start = () => {
+      cancelAnimationFrame(raf);
+      last = 0;
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => cancelAnimationFrame(raf);
 
     let resizeTimer: ReturnType<typeof setTimeout>;
     const onResize = () => {
@@ -174,24 +217,54 @@ export function CodeRain() {
     };
 
     const onVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else {
-        last = 0;
-        raf = requestAnimationFrame(loop);
+      if (document.hidden) stop();
+      else start();
+    };
+
+    // Back/forward (bfcache) can restore the page with the canvas frozen and no
+    // rAF running; rebuild + restart so it never comes back as a dead frame.
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        build();
+        start();
       }
     };
 
+    // Mobile GPUs can drop the 2D context under memory pressure; without this
+    // the canvas would stay permanently blank. Ask for it back, then re-init.
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      stop();
+    };
+    const onContextRestored = () => {
+      build();
+      start();
+    };
+
     build();
-    raf = requestAnimationFrame(loop);
+    start();
     window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    window.addEventListener("pageshow", onPageShow);
     document.addEventListener("visibilitychange", onVisibility);
+    canvas.addEventListener("contextlost", onContextLost as EventListener);
+    canvas.addEventListener(
+      "contextrestored",
+      onContextRestored as EventListener,
+    );
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      window.removeEventListener("pageshow", onPageShow);
       document.removeEventListener("visibilitychange", onVisibility);
+      canvas.removeEventListener("contextlost", onContextLost as EventListener);
+      canvas.removeEventListener(
+        "contextrestored",
+        onContextRestored as EventListener,
+      );
     };
   }, [pathname]);
 
