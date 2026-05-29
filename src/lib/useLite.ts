@@ -16,11 +16,25 @@ export function useLite() {
   const [lite, setLite] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 820px), (pointer: coarse)");
+    let mq: MediaQueryList;
+    try {
+      mq = window.matchMedia("(max-width: 820px), (pointer: coarse)");
+    } catch {
+      return; // matchMedia unavailable — stay non-lite, never throw
+    }
     const update = () => setLite(mq.matches);
     update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    // Safari < 14 only has the deprecated addListener; calling addEventListener
+    // there throws, so feature-detect to stay crash-proof on old iOS.
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
+    }
+    if (typeof mq.addListener === "function") {
+      mq.addListener(update);
+      return () => mq.removeListener(update);
+    }
+    return;
   }, []);
 
   return lite;

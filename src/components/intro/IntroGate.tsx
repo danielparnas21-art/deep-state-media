@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Lock, LockOpen, Volume2, VolumeX } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
@@ -179,7 +179,43 @@ function renderBootLine(text: string | undefined, full: string): ReactNode {
   return text;
 }
 
+/**
+ * Error boundary around the gate. The gate is the one full-screen interactive
+ * choke point, so if it ever throws during render we must NOT leave a frozen
+ * overlay. On error we drop the gate, restore scrolling, and signal the page to
+ * reveal — the visitor always lands on the site, never a stuck screen.
+ */
+class GateBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch() {
+    try {
+      document.body.style.overflow = "";
+      window.__dsmEntered = true;
+      window.dispatchEvent(new Event("dsm:enter"));
+    } catch {
+      /* ignore */
+    }
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 export function IntroGate() {
+  return (
+    <GateBoundary>
+      <IntroGateInner />
+    </GateBoundary>
+  );
+}
+
+function IntroGateInner() {
   const reduce = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
   // The boot lines, personalized on the client after mount (see effect below).
@@ -205,6 +241,17 @@ export function IntroGate() {
   // setState updater (dispatching there warns about cross-component updates).
   const enteringRef = useRef(false);
   const interval = useRef<ReturnType<typeof setInterval> | null>(null);
+  // The exit-path timers (submit→enter→done) live OUTSIDE `timers.current`, so
+  // the boot effect's cleanup — which re-runs on every phase change — can never
+  // clear them and strand the gate mid-exit (which reads as a frozen overlay).
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (exitTimer.current) clearTimeout(exitTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     try {
@@ -376,8 +423,9 @@ export function IntroGate() {
     window.__dsmEntered = true;
     window.dispatchEvent(new Event("dsm:enter"));
     setPhase("exiting");
-    const t = setTimeout(() => setPhase("done"), reduce ? 220 : 920);
-    timers.current.push(t);
+    // Kept off timers.current so the boot effect's phase-change cleanup can't
+    // clear it before it fires (which would strand the gate in "exiting").
+    exitTimer.current = setTimeout(() => setPhase("done"), reduce ? 220 : 920);
   };
 
   // Returning visitors who already gave their email skip the capture prompt
@@ -450,8 +498,7 @@ export function IntroGate() {
     // hold the beat so it actually lands, then breach in.
     setUnlocked(true);
     gateUnlock();
-    const t = setTimeout(enter, 1200);
-    timers.current.push(t);
+    exitTimer.current = setTimeout(enter, 1200);
   };
 
   if (phase === "done") return null;
