@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { cn } from "@/lib/cn";
 
@@ -78,14 +78,25 @@ export function V1Nav() {
           ) : (
             <Link
               href="/team"
-              className="group inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-signal-500 px-2.5 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-signal-600 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-[11px] sm:tracking-[0.18em]"
+              className="group relative inline-flex items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-md bg-signal-500 px-2.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white shadow-[0_0_22px_-6px_rgba(200,57,42,0.85)] ring-1 ring-inset ring-white/20 transition-colors hover:bg-signal-600 sm:gap-2 sm:px-5 sm:py-2.5 sm:text-[11px] sm:tracking-[0.16em]"
             >
-              <span className="sm:hidden">Team</span>
-              <span className="hidden sm:inline">Meet the team</span>
-              <ArrowRight
-                size={13}
-                className="transition-transform group-hover:translate-x-0.5"
+              {/* CRT scanline texture — terminal/clearance feel */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-[0.18]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, rgba(0,0,0,0.6) 0px, rgba(0,0,0,0.6) 1px, transparent 1px, transparent 3px)",
+                }}
               />
+              {/* Corner stamp tick */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-1 top-1 h-1 w-1 rotate-45 bg-white/40"
+              />
+              <Lock size={11} className="relative shrink-0" />
+              <span className="relative sm:hidden">Team</span>
+              <span className="relative hidden sm:inline">Meet the team</span>
             </Link>
           )}
         </div>
