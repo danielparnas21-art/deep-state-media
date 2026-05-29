@@ -141,25 +141,26 @@ export function gateTick(): void {
   o.stop(now + 0.08);
 }
 
-/** Sharp accent the instant "deep state" snaps into focus, before the breach. */
+/** Impact hit the instant "deep state" slams into focus, before the breach. A
+ *  short mid sine punch (body) plus a bright noise crack (snap) — a clean hit,
+ *  not a buzz. */
 export function gateStab(): void {
   const c = ctx;
   if (!c || !master || muted) return;
   const now = c.currentTime;
-  const g = c.createGain();
-  g.gain.setValueAtTime(0.0001, now);
-  g.gain.exponentialRampToValueAtTime(0.3, now + 0.008);
-  g.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
-  const o = c.createOscillator();
-  o.type = "sawtooth";
-  o.frequency.setValueAtTime(520, now);
-  o.frequency.exponentialRampToValueAtTime(180, now + 0.3);
-  const lp = c.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = 2600;
-  o.connect(lp).connect(g).connect(master);
-  o.start(now);
-  o.stop(now + 0.42);
+  const pg = c.createGain();
+  pg.gain.setValueAtTime(0.0001, now);
+  pg.gain.exponentialRampToValueAtTime(0.42, now + 0.006);
+  pg.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+  const po = c.createOscillator();
+  po.type = "sine";
+  po.frequency.setValueAtTime(320, now);
+  po.frequency.exponentialRampToValueAtTime(105, now + 0.2);
+  po.connect(pg).connect(master);
+  po.start(now);
+  po.stop(now + 0.32);
+  // Bright transient crack on top for the snap.
+  noiseBurst(c, 0.12, 0.28, 2800, false);
 }
 
 /** The breach — a low boom + filtered crack as the lock blows open. */

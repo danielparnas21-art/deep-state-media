@@ -99,13 +99,13 @@ function renderBootLine(text: string | undefined, full: string): ReactNode {
       <>
         {full.slice(0, idx)}
         <motion.span
-          initial={{ scale: 1.55, opacity: 0, filter: "brightness(2.4)" }}
-          animate={{ scale: 1, opacity: 1, filter: "brightness(1)" }}
-          transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
-          className="inline-block font-bold uppercase tracking-wide text-signal-400"
+          initial={{ scale: 0.4, opacity: 0 }}
+          animate={{ scale: [0.4, 1.18, 1], opacity: 1 }}
+          transition={{ duration: 0.5, ease: EASE_OUT_EXPO, times: [0, 0.62, 1] }}
+          className="mx-0.5 inline-block rounded-[3px] bg-signal-500 px-1.5 py-0.5 font-bold uppercase tracking-wider text-white"
           style={{
-            textShadow:
-              "0 0 22px rgba(200,57,42,0.9), 0 0 5px rgba(255,255,255,0.55)",
+            boxShadow:
+              "0 0 30px rgba(200,57,42,0.95), 0 0 64px rgba(200,57,42,0.4)",
           }}
         >
           {full.slice(idx, idx + "deep state".length)}
