@@ -180,6 +180,60 @@ function renderBootLine(text: string | undefined, full: string): ReactNode {
 }
 
 /**
+ * One-shot cipher decode — text lands scrambled and resolves left-to-right on
+ * mount. SSR-safe (starts as a deterministic dot mask).
+ */
+function ScrambleText({ text }: { text: string }) {
+  const [out, setOut] = useState(() => text.replace(/[^ ]/g, "·"));
+  useEffect(() => {
+    let frame = 0;
+    const iv = setInterval(() => {
+      frame += 1;
+      const resolved = Math.min(Math.floor(frame / 1.3), text.length);
+      setOut(
+        text
+          .split("")
+          .map((ch, i) =>
+            ch === " "
+              ? " "
+              : i < resolved
+                ? ch
+                : GLYPHS[(Math.random() * GLYPHS.length) | 0],
+          )
+          .join(""),
+      );
+      if (resolved >= text.length) clearInterval(iv);
+    }, 34);
+    return () => clearInterval(iv);
+  }, [text]);
+  return <>{out}</>;
+}
+
+/**
+ * Secure-terminal HUD frame — corner brackets + a faint perimeter line that
+ * turn the pre-breach screen into a live clearance interface.
+ */
+function HudFrame() {
+  const corner = "absolute h-5 w-5 border-signal-500/45 sm:h-7 sm:w-7";
+  return (
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-[2]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
+    >
+      <div className="absolute inset-3 border border-white/[0.06] sm:inset-5" />
+      <span className={cn(corner, "left-3 top-3 border-l-2 border-t-2 sm:left-5 sm:top-5")} />
+      <span className={cn(corner, "right-3 top-3 border-r-2 border-t-2 sm:right-5 sm:top-5")} />
+      <span className={cn(corner, "bottom-3 left-3 border-b-2 border-l-2 sm:bottom-5 sm:left-5")} />
+      <span className={cn(corner, "bottom-3 right-3 border-b-2 border-r-2 sm:bottom-5 sm:right-5")} />
+    </motion.div>
+  );
+}
+
+/**
  * Error boundary around the gate. The gate is the one full-screen interactive
  * choke point, so if it ever throws during render we must NOT leave a frozen
  * overlay. On error we drop the gate, restore scrolling, and signal the page to
@@ -586,6 +640,8 @@ function IntroGateInner() {
               <DataStream />
               {/* Investigation-subject ticker hugging the right edge, for balance */}
               <SubjectTicker />
+              {/* Secure-terminal HUD frame */}
+              <HudFrame />
             </>
           )}
         </div>
@@ -653,20 +709,70 @@ function IntroGateInner() {
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />
                 Secure channel ready
               </p>
-              <h2 className="display-stencil text-[clamp(2.4rem,7vw,5rem)] leading-[0.98] text-paper">
-                Breach the <span className="accent-signal">deep state.</span>
-              </h2>
+              <motion.h2
+                initial={reduce ? false : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
+                className="display-stencil text-[clamp(2.4rem,7vw,5rem)] leading-[0.98] text-paper"
+              >
+                Breach the{" "}
+                <motion.span
+                  className="accent-signal inline-block"
+                  animate={
+                    reduce
+                      ? undefined
+                      : {
+                          textShadow: [
+                            "0 0 16px rgba(200,57,42,0.28)",
+                            "0 0 34px rgba(200,57,42,0.7)",
+                            "0 0 16px rgba(200,57,42,0.28)",
+                          ],
+                        }
+                  }
+                  transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  {reduce ? "deep state." : <ScrambleText text="deep state." />}
+                </motion.span>
+              </motion.h2>
               <motion.button
                 type="button"
                 onClick={initiate}
+                initial={false}
+                animate={
+                  reduce
+                    ? undefined
+                    : {
+                        boxShadow: [
+                          "0 0 24px -8px rgba(200,57,42,0.55)",
+                          "0 0 48px -4px rgba(200,57,42,0.9)",
+                          "0 0 24px -8px rgba(200,57,42,0.55)",
+                        ],
+                      }
+                }
+                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
                 whileHover={reduce ? undefined : { scale: 1.03 }}
                 whileTap={reduce ? undefined : { scale: 0.97 }}
-                className="group mt-10 inline-flex items-center gap-3 rounded-full bg-signal-500 px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_20px_60px_-20px_rgba(200,57,42,0.7)] transition-colors hover:bg-signal-600"
+                className="group relative mt-10 inline-flex items-center gap-3 overflow-hidden rounded-md bg-signal-500 px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_0_28px_-8px_rgba(200,57,42,0.6)] ring-1 ring-inset ring-white/20 transition-colors hover:bg-signal-600"
               >
-                Initiate decryption
+                {/* CRT scanline texture */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 opacity-[0.16]"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg, rgba(0,0,0,0.6) 0px, rgba(0,0,0,0.6) 1px, transparent 1px, transparent 3px)",
+                  }}
+                />
+                {/* Corner stamp tick */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute right-1.5 top-1.5 h-1.5 w-1.5 rotate-45 bg-white/40"
+                />
+                <Lock size={15} className="relative shrink-0" />
+                <span className="relative">Initiate decryption</span>
                 <ArrowRight
                   size={16}
-                  className="transition-transform group-hover:translate-x-1"
+                  className="relative transition-transform group-hover:translate-x-1"
                 />
               </motion.button>
               <p className="mt-5 text-[10px] uppercase tracking-[0.2em] text-paper/35">
