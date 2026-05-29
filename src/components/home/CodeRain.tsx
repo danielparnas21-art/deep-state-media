@@ -15,8 +15,8 @@ import { usePathname } from "next/navigation";
  * away absolute box. Homepage-only via pathname. This signature ambient layer
  * deliberately animates for everyone — including OS "reduce motion" — since it's
  * a slow background texture, not a vestibular trigger; the expensive bits (bloom,
- * DPR) are still trimmed on touch devices. Throttled to ~32fps, DPR capped at 2,
- * paused while the tab is hidden.
+ * DPR) are still trimmed on touch devices. Throttled to ~24fps, DPR capped at
+ * 1.5 (1 on touch), paused while the tab is hidden.
  *
  * Hardened to never glitch on mobile or desktop: width-only rebuilds (ignoring
  * the mobile URL-bar resize storm), a single rAF loop that can never stack,
@@ -101,7 +101,11 @@ export function CodeRain() {
       // report 0) and keep the last good frame rather than blanking the canvas.
       if (vw <= 0 || vh <= 0) return;
       lite = isLite();
-      const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
+      // The per-frame trail-fade fills the whole canvas, so its cost scales with
+      // the internal pixel count (dpr²). Keep the density modest — 1× on touch,
+      // 1.5× on desktop — which is the single biggest win for smoothness; a soft
+      // backdrop doesn't need retina sharpness.
+      const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1 : 1.5);
       w = vw;
       lastW = vw;
       // Pad the height so the canvas still covers the screen when a mobile URL
@@ -176,7 +180,7 @@ export function CodeRain() {
 
     let raf = 0;
     let last = 0;
-    const interval = 1000 / 32;
+    const interval = 1000 / 24;
 
     const loop = (t: number) => {
       raf = requestAnimationFrame(loop);
@@ -185,7 +189,7 @@ export function CodeRain() {
       last = t;
       step();
       // Watch real frame spacing (which reflects GPU compositing of the bloom,
-      // not just JS time). A sustained streak below ~13fps on a non-lite device
+      // not just JS time). A sustained streak below ~10fps on a non-lite device
       // trips the latch; huge deltas (tab stalls / bfcache) are ignored.
       if (!degraded && !lite) {
         if (delta > interval * 2.5 && delta < 1000) {

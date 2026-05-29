@@ -522,33 +522,6 @@ export function IntroGate() {
           </button>
         )}
       </motion.div>
-
-      {/* The vault opening — a terminal "ACCESS GRANTED" stamp slams in as the
-          doors split apart, the beat right after clearance clears. Sits outside
-          the content layer so it stays sharp while that fades. */}
-      {!reduce && exiting && (
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 1, 0] }}
-          transition={{ duration: 0.85, times: [0, 0.14, 0.62, 1], ease: "easeOut" }}
-        >
-          <motion.div
-            initial={{ scale: 1.18 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.32, ease: EASE_OUT_EXPO }}
-            className="border-2 border-signal-500 px-6 py-3 font-mono text-[clamp(0.85rem,2.6vw,1.35rem)] font-bold uppercase tracking-[0.34em] text-signal-400"
-            style={{
-              textShadow: "0 0 22px rgba(200,57,42,0.65)",
-              boxShadow:
-                "0 0 50px -8px rgba(200,57,42,0.55), inset 0 0 24px -10px rgba(200,57,42,0.5)",
-            }}
-          >
-            Access granted
-          </motion.div>
-        </motion.div>
-      )}
     </div>
   );
 }
