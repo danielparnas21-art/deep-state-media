@@ -29,10 +29,11 @@ const GLYPHS = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&/<>*+=?·";
 const TOTAL_CHARS = BOOT_LINES.reduce((n, l) => n + l.length, 0);
 
 // Headline, split into lines/segments so the decode effect can resolve it
-// character-by-character while preserving the accent styling on "the truth?".
+// character-by-character while preserving the accent styling. Written as the
+// next beat after the boot's "exposing the deep state" payoff — the reveal.
 const HEADLINE: { text: string; accent?: boolean }[][] = [
-  [{ text: "Are you ready" }],
-  [{ text: "for " }, { text: "the truth?", accent: true }],
+  [{ text: "The truth is" }],
+  [{ text: "declassified.", accent: true }],
 ];
 
 declare global {
@@ -521,6 +522,33 @@ export function IntroGate() {
           </button>
         )}
       </motion.div>
+
+      {/* The vault opening — a terminal "ACCESS GRANTED" stamp slams in as the
+          doors split apart, the beat right after clearance clears. Sits outside
+          the content layer so it stays sharp while that fades. */}
+      {!reduce && exiting && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 0.85, times: [0, 0.14, 0.62, 1], ease: "easeOut" }}
+        >
+          <motion.div
+            initial={{ scale: 1.18 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.32, ease: EASE_OUT_EXPO }}
+            className="border-2 border-signal-500 px-6 py-3 font-mono text-[clamp(0.85rem,2.6vw,1.35rem)] font-bold uppercase tracking-[0.34em] text-signal-400"
+            style={{
+              textShadow: "0 0 22px rgba(200,57,42,0.65)",
+              boxShadow:
+                "0 0 50px -8px rgba(200,57,42,0.55), inset 0 0 24px -10px rgba(200,57,42,0.5)",
+            }}
+          >
+            Access granted
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -812,20 +840,23 @@ const hexStr = (n: number) =>
 const FEED: ((r: (n: number) => number) => string)[] = [
   (r) => `decrypting FOIA #${4000 + r(5999)} …`,
   (r) => `redaction lifted ▸ pg ${1 + r(240)}`,
+  () => "cross-referencing both parties",
   () => "xref: dark money ⟶ super PAC",
-  (r) => `Epstein flight logs ▸ ${10 + r(40)} names`,
-  () => "Panama Papers ▸ match found",
+  (r) => `wire $${1 + r(9)}.${r(9)}M traced`,
+  () => "follow the money …",
+  (r) => `${2 + r(8)} names surfaced`,
+  () => "donor ledger ▸ R + D flagged",
   () => "offshore shell co. mapped",
   () => "lobbying disclosure flagged",
-  (r) => `wire $${1 + r(9)}.${r(9)}M traced`,
-  () => "subpoena trail ▸ traced",
-  () => "campaign finance ▸ both aisles",
   () => "revolving door ▸ K Street",
-  () => "classified memo ▸ declassified",
-  () => "donor records indexed …",
+  () => "campaign finance ▸ both aisles",
+  (r) => `Epstein flight logs ▸ ${10 + r(40)} names`,
+  () => "Panama Papers ▸ match found",
+  () => "subpoena trail ▸ traced",
   () => "whistleblower dossier opened",
-  () => "PAC ledger ▸ R + D flagged",
-  () => "follow the money …",
+  () => "classified memo ▸ declassified",
+  () => "no party spared …",
+  () => "exposing the deep state …",
 ];
 
 /**
