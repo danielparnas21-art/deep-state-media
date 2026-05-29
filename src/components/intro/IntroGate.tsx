@@ -274,8 +274,10 @@ export function IntroGate() {
   // then plays with sound from the very first frame.
   const initiate = () => {
     if (phase !== "idle") return;
-    if (soundOn) armGateAudio();
+    // Start the boot first so the tap always advances — audio is best-effort
+    // and must never be able to block entry.
     setPhase("typing");
+    if (soundOn) armGateAudio();
   };
 
   // Decrypt boot sequence — each line scrambles random glyphs, then resolves
@@ -586,11 +588,17 @@ export function IntroGate() {
           {phase === "idle" ? (
             <motion.div
               key="idle"
+              role="button"
+              tabIndex={0}
+              onClick={initiate}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") initiate();
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, scale: 1.04, filter: "blur(6px)" }}
               transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
-              className="relative flex flex-col items-center"
+              className="relative flex cursor-pointer flex-col items-center"
             >
               <p className="mb-6 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.3em] text-signal-400">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-signal-500" />

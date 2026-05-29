@@ -21,23 +21,36 @@ let muted = false;
 
 function getContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
-  if (!ctx) {
-    const AC = window.AudioContext ?? (window as WebkitWindow).webkitAudioContext;
-    if (!AC) return null;
-    ctx = new AC();
-    master = ctx.createGain();
-    master.gain.value = 0.9;
-    master.connect(ctx.destination);
+  // Creating/resuming an AudioContext can throw on some devices (locked audio,
+  // low-power/silent mode, unsupported browser). Audio is non-critical, so we
+  // swallow any failure and return null — callers no-op.
+  try {
+    if (!ctx) {
+      const AC =
+        window.AudioContext ?? (window as WebkitWindow).webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      master = ctx.createGain();
+      master.gain.value = 0.9;
+      master.connect(ctx.destination);
+    }
+    if (ctx.state === "suspended") void ctx.resume();
+    return ctx;
+  } catch {
+    return null;
   }
-  if (ctx.state === "suspended") void ctx.resume();
-  return ctx;
 }
 
-/** Call from a user gesture: unlocks the context and starts the ambient drone. */
+/** Call from a user gesture: unlocks the context and starts the ambient drone.
+ *  Fully guarded — audio must never be able to throw into the gate flow. */
 export function armGateAudio(): void {
-  const c = getContext();
-  if (!c || muted) return;
-  if (!stopDrone) startDrone(c);
+  try {
+    const c = getContext();
+    if (!c || muted) return;
+    if (!stopDrone) startDrone(c);
+  } catch {
+    /* audio unavailable — never block the gate */
+  }
 }
 
 /** Mute/unmute. Muting stops the drone; unmuting waits for a gesture to re-arm. */
