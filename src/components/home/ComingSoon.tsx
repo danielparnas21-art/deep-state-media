@@ -292,12 +292,16 @@ export function ComingSoon({
                 className="relative transition-transform group-hover:translate-x-1"
               />
             </Link>
-            <a
-              href="#waitlist"
-              className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-paper transition-colors hover:border-white/50"
+            <Link
+              href="/reports"
+              className="group inline-flex items-center gap-2 rounded-md border border-white/20 px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-paper transition-colors hover:border-white/45"
             >
-              Get notified at launch
-            </a>
+              Reports
+              <ArrowUpRight
+                size={15}
+                className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </Link>
           </motion.div>
         </div>
 
