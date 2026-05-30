@@ -215,20 +215,29 @@ function ScrambleText({ text }: { text: string }) {
  */
 function HudFrame() {
   const corner = "absolute h-5 w-5 border-signal-500/45 sm:h-7 sm:w-7";
+  // Bottom inset clears the mobile browser toolbar / home indicator: size to the
+  // visible viewport (svh, not the layout viewport that sits behind the chrome)
+  // and pad the bottom by the safe-area, so the lower corners are never cut off.
+  const bottomInset = "bottom-[max(1rem,env(safe-area-inset-bottom))]";
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-[2]"
+      className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[100svh]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
     >
-      <div className="absolute inset-3 border border-white/[0.06] sm:inset-5" />
-      <span className={cn(corner, "left-3 top-3 border-l-2 border-t-2 sm:left-5 sm:top-5")} />
-      <span className={cn(corner, "right-3 top-3 border-r-2 border-t-2 sm:right-5 sm:top-5")} />
-      <span className={cn(corner, "bottom-3 left-3 border-b-2 border-l-2 sm:bottom-5 sm:left-5")} />
-      <span className={cn(corner, "bottom-3 right-3 border-b-2 border-r-2 sm:bottom-5 sm:right-5")} />
+      <div
+        className={cn(
+          "absolute left-4 right-4 top-4 border border-white/[0.06] sm:left-5 sm:right-5 sm:top-5 sm:bottom-5",
+          bottomInset,
+        )}
+      />
+      <span className={cn(corner, "left-4 top-4 border-l-2 border-t-2 sm:left-5 sm:top-5")} />
+      <span className={cn(corner, "right-4 top-4 border-r-2 border-t-2 sm:right-5 sm:top-5")} />
+      <span className={cn(corner, bottomInset, "left-4 border-b-2 border-l-2 sm:bottom-5 sm:left-5")} />
+      <span className={cn(corner, bottomInset, "right-4 border-b-2 border-r-2 sm:bottom-5 sm:right-5")} />
     </motion.div>
   );
 }
