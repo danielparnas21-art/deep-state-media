@@ -147,13 +147,13 @@ function canonicalImageKey(url: string): string {
 
 type ParsedItem = Writing & { _bodyImages: string[] };
 
-function normalize(item: RawItem): ParsedItem | null {
+function normalize(item: RawItem, fallbackAuthor: string): ParsedItem | null {
   const title = textify(item.title);
   const link = textify(item.link);
   if (!title || !link) return null;
   const guid =
     typeof item.guid === "string" ? item.guid : textify(item.guid) || link;
-  const author = textify(item["dc:creator"]) || SUBSTACK_AUTHOR;
+  const author = textify(item["dc:creator"]) || fallbackAuthor;
   const pubDate = textify(item.pubDate);
   const publishedAt = pubDate
     ? new Date(pubDate).toISOString()
@@ -217,15 +217,18 @@ function resolveCoversAcrossFeed(parsed: ParsedItem[]): Writing[] {
 }
 
 /**
- * Fetches Lev's Substack RSS, parses, and returns a sorted list of Writings.
- * Uses Next.js's fetch revalidate so the feed is cached on the edge for 10
- * minutes — keeps requests light, keeps the surface fresh enough for an
- * editorial column.
+ * Fetch any Substack RSS feed, parse it, and return a date-sorted list of posts.
+ * Uses Next.js fetch revalidate so the feed is cached for 10 minutes — light on
+ * requests, fresh enough to read as "live." Always resolves (returns [] on any
+ * network/parse failure) so a feed hiccup never breaks the page.
  */
-export async function listWritings(): Promise<Writing[]> {
+export async function fetchSubstack(
+  feedUrl: string,
+  fallbackAuthor: string,
+): Promise<Writing[]> {
   let xml = "";
   try {
-    const res = await fetch(SUBSTACK_FEED, {
+    const res = await fetch(feedUrl, {
       next: { revalidate: 600 },
       headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstate.media)" },
     });
@@ -245,7 +248,7 @@ export async function listWritings(): Promise<Writing[]> {
   const rawItems = parsed.rss?.channel?.item;
   if (!rawItems) return [];
   const parsedItems = (Array.isArray(rawItems) ? rawItems : [rawItems])
-    .map(normalize)
+    .map((it) => normalize(it, fallbackAuthor))
     .filter((w): w is ParsedItem => w !== null);
 
   const items = resolveCoversAcrossFeed(parsedItems);
@@ -254,4 +257,9 @@ export async function listWritings(): Promise<Writing[]> {
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   );
+}
+
+/** Lev Parnas's "Lev Remembers" column. */
+export async function listWritings(): Promise<Writing[]> {
+  return fetchSubstack(SUBSTACK_FEED, SUBSTACK_AUTHOR);
 }

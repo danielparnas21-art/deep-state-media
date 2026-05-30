@@ -20,6 +20,9 @@ export function V1Footer() {
             </p>
           </div>
           <nav className="flex flex-wrap items-center gap-x-7 gap-y-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-paper/60">
+            <Link href="/reports" className="transition-colors hover:text-paper">
+              Reports
+            </Link>
             <Link href="/team" className="transition-colors hover:text-paper">
               Meet the team
             </Link>

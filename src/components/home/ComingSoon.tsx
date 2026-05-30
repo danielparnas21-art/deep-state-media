@@ -11,6 +11,8 @@ import {
 import { ArrowRight, ArrowUpRight, Lock, ShieldCheck } from "lucide-react";
 import { EASE_OUT_EXPO, stagger, wordRise } from "@/lib/motion";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
+import { ReportCard } from "@/components/reports/ReportCard";
+import type { Report } from "@/lib/reports";
 import { useLite } from "@/lib/useLite";
 import { cn } from "@/lib/cn";
 
@@ -82,7 +84,13 @@ const FRONTS = [
   },
 ];
 
-export function ComingSoon() {
+export function ComingSoon({
+  reports = [],
+  substackUrl = "https://substack.com/@deepstatemedia",
+}: {
+  reports?: Report[];
+  substackUrl?: string;
+} = {}) {
   const reduce = useReducedMotion();
   const lite = useLite();
   // Hold the scroll-parallax + animated blur/blend layers static on touch /
@@ -346,6 +354,68 @@ export function ComingSoon() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── Reports — live from Substack ─────────────────────── */}
+      <section
+        aria-labelledby="reports-heading"
+        className="relative isolate overflow-hidden py-20 text-paper sm:py-24"
+      >
+        <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
+          <div className="flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
+            <div>
+              <p className="mb-4 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.24em] text-signal-400">
+                <Pulse size="md" />
+                Live from Substack
+              </p>
+              <h2
+                id="reports-heading"
+                className="display-stencil text-[clamp(2rem,4.5vw,3.4rem)] leading-[0.98]"
+              >
+                The reports<span className="accent-signal">.</span>
+              </h2>
+            </div>
+            <Link
+              href="/reports"
+              className="group inline-flex items-center gap-2 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.18em] text-paper/60 transition-colors hover:text-paper"
+            >
+              All reports
+              <ArrowUpRight
+                size={14}
+                className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </Link>
+          </div>
+
+          {reports.length > 0 ? (
+            <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {reports.map((report) => (
+                <li key={report.guid}>
+                  <ReportCard report={report} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-8 flex flex-col items-start gap-5 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] px-7 py-8 sm:flex-row sm:items-center sm:justify-between">
+              <p className="max-w-md text-paper/65">
+                We&rsquo;re publishing now on Substack. Follow along and every
+                report lands here the moment it goes out.
+              </p>
+              <a
+                href={substackUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-signal-500 px-6 py-3 text-[12px] font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-signal-600"
+              >
+                Follow on Substack
+                <ArrowUpRight
+                  size={14}
+                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </a>
+            </div>
+          )}
         </div>
       </section>
 
