@@ -3,17 +3,19 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
+import { EMAIL_RE, suggestEmailFix } from "@/lib/emailCheck";
 
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [suggestion, setSuggestion] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!EMAIL_RE.test(email.trim())) {
       setError("That email doesn't look right.");
       return;
     }
@@ -71,7 +73,13 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
               required
               placeholder="you@somewhere.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                const v = e.target.value;
+                setEmail(v);
+                setSuggestion(
+                  EMAIL_RE.test(v.trim()) ? suggestEmailFix(v.trim()) : null,
+                );
+              }}
               disabled={submitting}
               className="w-full bg-transparent py-3.5 pl-5 pr-2 text-sm text-ink-900 placeholder:text-ink-400 focus:outline-none disabled:opacity-50"
               aria-label="Email address"
@@ -91,6 +99,18 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         <p role="alert" className="mt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-signal-600">
           {error}
         </p>
+      )}
+      {suggestion && !error && !submitted && (
+        <button
+          type="button"
+          onClick={() => {
+            setEmail(suggestion);
+            setSuggestion(null);
+          }}
+          className="mt-2 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-400 transition-colors hover:text-ink-700"
+        >
+          Did you mean <span className="text-signal-600">{suggestion}</span>?
+        </button>
       )}
       {!submitted && (
         <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-ink-400">

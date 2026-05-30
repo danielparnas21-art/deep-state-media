@@ -16,6 +16,7 @@ import {
   stopGateAudio,
 } from "@/lib/gateAudio";
 import { cn } from "@/lib/cn";
+import { EMAIL_RE, suggestEmailFix } from "@/lib/emailCheck";
 
 /**
  * The Unlock — a full-screen entry gate that plays on every page load. A short
@@ -291,6 +292,9 @@ function IntroGateInner() {
   const [charged, setCharged] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
+  // "Did you mean gmail.com?" — set when a complete email's domain looks like a
+  // typo of a popular provider.
+  const [suggestion, setSuggestion] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   // Flips the locked "what you unlock" chips open on a successful submit.
   const [unlocked, setUnlocked] = useState(false);
@@ -923,8 +927,12 @@ function IntroGateInner() {
                       required
                       value={email}
                       onChange={(e) => {
-                        setEmail(e.target.value);
+                        const v = e.target.value;
+                        setEmail(v);
                         if (emailError) setEmailError(null);
+                        setSuggestion(
+                          EMAIL_RE.test(v.trim()) ? suggestEmailFix(v.trim()) : null,
+                        );
                       }}
                       placeholder="you@email.com"
                       aria-label="Email address"
@@ -966,6 +974,20 @@ function IntroGateInner() {
                   >
                     {emailError ?? ""}
                   </p>
+
+                  {suggestion && !emailError && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEmail(suggestion);
+                        setSuggestion(null);
+                      }}
+                      className="mt-1 text-[12px] text-paper/55 transition-colors hover:text-paper"
+                    >
+                      Did you mean{" "}
+                      <span className="text-signal-400">{suggestion}</span>?
+                    </button>
+                  )}
 
                   {/* What the email unlocks — locked until they're on the list.
                       On submit they cascade open in access-granted green. */}
