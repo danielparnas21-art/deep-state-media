@@ -58,7 +58,8 @@ const FILM_GRAIN =
  * The V1 teaser landing. While the site is unlaunched this replaces the full
  * movement homepage: the intro gate opens onto this "Coming soon" screen, whose
  * one real destination is Meet the Team. It collects a waitlist, tells the
- * story, and previews the two fronts (the podcast, the campaign desk) —
+ * story, and previews the three fronts (the podcast, the campaign desk, the
+ * next generation) —
  * without pretending any of them have shipped yet.
  *
  * The hero stays hidden until the gate's doors open (listening for "dsm:enter"),
@@ -80,6 +81,14 @@ const FRONTS = [
     title: "On the trail with Lev",
     body: "We'll be inside Lev's congressional run from day one — on the trail through the entire campaign, with full transparency.",
     status: "Filing soon",
+    href: undefined as string | undefined,
+  },
+  {
+    index: "03",
+    kicker: "The Next Generation",
+    title: "A better script",
+    body: "Daniel takes the fight to the next generation — going live and building his own shows that prove you can be ambitious, successful, and still be a good person. He cuts through the script the elite sell young people online, and exposes how the powerful profit from keeping them distracted.",
+    status: "Going live",
     href: undefined as string | undefined,
   },
 ];
@@ -435,7 +444,7 @@ export function ComingSoon({
               id="coming-heading"
               className="display-stencil text-[clamp(2.2rem,5vw,4rem)] leading-[1.02]"
             >
-              Two fronts.{" "}
+              Three fronts.{" "}
               <span className="accent-signal">One movement.</span>
             </h2>
           </div>
