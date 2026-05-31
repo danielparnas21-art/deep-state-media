@@ -12,6 +12,7 @@ import { ArrowRight, ArrowUpRight, Lock, ShieldCheck } from "lucide-react";
 import { EASE_OUT_EXPO, stagger, wordRise } from "@/lib/motion";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { ReportCard } from "@/components/reports/ReportCard";
+import { Declassify } from "@/components/motion/Declassify";
 import type { Report } from "@/lib/reports";
 import { useLite } from "@/lib/useLite";
 import { cn } from "@/lib/cn";
@@ -382,8 +383,10 @@ export function ComingSoon({
               id="coming-heading"
               className="display-stencil text-[clamp(2.2rem,5vw,4rem)] leading-[1.02]"
             >
-              Three fronts.{" "}
-              <span className="accent-signal">One movement.</span>
+              <Declassify>
+                Three fronts.{" "}
+                <span className="accent-signal">One movement.</span>
+              </Declassify>
             </h2>
           </div>
 
@@ -411,7 +414,9 @@ export function ComingSoon({
                 id="reports-heading"
                 className="display-stencil text-[clamp(2rem,4.5vw,3.4rem)] leading-[0.98]"
               >
-                The reports<span className="accent-signal">.</span>
+                <Declassify>
+                  The reports<span className="accent-signal">.</span>
+                </Declassify>
               </h2>
             </div>
             <Link
@@ -470,8 +475,10 @@ export function ComingSoon({
               id="waitlist-heading"
               className="display-stencil text-[clamp(2.3rem,5.5vw,4.5rem)] leading-[0.98]"
             >
-              Get the truth{" "}
-              <span className="accent-signal">before they bury it.</span>
+              <Declassify>
+                Get the truth{" "}
+                <span className="accent-signal">before they bury it.</span>
+              </Declassify>
             </h2>
             <p className="mx-auto mt-7 max-w-xl text-deck text-paper/65">
               Get on the list and we&rsquo;ll bring it straight to your inbox —
