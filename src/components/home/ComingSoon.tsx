@@ -86,7 +86,7 @@ const FRONTS = [
   {
     index: "03",
     kicker: "The Next Generation",
-    title: "Question everything",
+    title: "Unplugged with Daniel Parnas",
     body: "Daniel is building the younger, consciousness-driven side of Deep State Media — going live with his own show, questioning the systems that control the world and the ones that control the mind: politics, culture, masculinity, corruption, conspiracies, success, ego, social media, and reality itself.",
     status: "Going live",
     href: undefined as string | undefined,
