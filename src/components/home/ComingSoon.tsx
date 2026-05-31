@@ -87,7 +87,7 @@ const FRONTS = [
     index: "03",
     kicker: "The Next Generation",
     title: "A better script",
-    body: "Daniel takes the fight to the next generation — going live and building his own shows that prove you can be ambitious, successful, and still be a good person. He cuts through the script the elite sell young people online, and exposes how the powerful profit from keeping them distracted.",
+    body: "Daniel takes the fight to the next generation — going live and building his own show that proves you can be ambitious, successful, and still be a good person. He cuts through the script the elite sell young people online, and exposes how the powerful profit from keeping them distracted.",
     status: "Going live",
     href: undefined as string | undefined,
   },
