@@ -1,20 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Lock, ShieldCheck } from "lucide-react";
 import { EASE_OUT_EXPO, stagger, wordRise } from "@/lib/motion";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
 import { ReportCard } from "@/components/reports/ReportCard";
 import { Declassify } from "@/components/motion/Declassify";
 import type { Report } from "@/lib/reports";
-import { useLite } from "@/lib/useLite";
 import { cn } from "@/lib/cn";
 
 /** A small pulsing signal dot — the brand's "live / on the record" tell. */
@@ -50,10 +44,6 @@ function Eyebrow({
 }
 
 const HEADLINE = ["The truth has", "a side now."];
-
-// Subtle film-grain texture (inline SVG fractal noise) for the cinematic hero.
-const FILM_GRAIN =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E\")";
 
 /**
  * The V1 teaser landing. While the site is unlaunched this replaces the full
@@ -102,12 +92,6 @@ export function ComingSoon({
   substackUrl?: string;
 } = {}) {
   const reduce = useReducedMotion();
-  const lite = useLite();
-  // Hold the scroll-parallax + animated blur/blend layers static on touch /
-  // small screens (or reduced motion) — moving 64px-blurred blobs every scroll
-  // frame is what makes mobile stutter. Desktop keeps the full motion.
-  const calm = reduce || lite;
-  const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
@@ -124,69 +108,19 @@ export function ComingSoon({
     };
   }, [reduce]);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-  const glowY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
-
   const state = revealed ? "visible" : "hidden";
 
   return (
     <div className="relative isolate bg-[#06070d]/65">
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section
-        ref={ref}
         aria-label="Deep State Media — coming soon"
         className="relative isolate flex min-h-[80svh] flex-col justify-center overflow-x-clip pb-20 pt-32 text-paper"
       >
-        <motion.div
-          aria-hidden
-          style={{ y: calm ? 0 : glowY }}
-          className="pointer-events-none absolute inset-0"
-        >
-          <motion.div
-            animate={calm ? { opacity: 0.7 } : { opacity: [0.45, 0.85, 0.45], scale: [1, 1.06, 1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className={cn(
-              "absolute -top-1/3 left-1/2 h-[88vh] w-[88vh] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.6),transparent_65%)]",
-              !calm && "blur-3xl",
-            )}
-          />
-          <motion.div
-            animate={calm ? { opacity: 0.65 } : { opacity: [0.5, 0.85, 0.5] }}
-            transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-            className={cn(
-              "absolute bottom-0 right-0 h-[58vh] w-[58vh] translate-x-1/4 translate-y-1/4 rounded-full bg-[radial-gradient(circle,rgba(200,57,42,0.22),transparent_70%)]",
-              !calm && "blur-3xl",
-            )}
-          />
-          <motion.div
-            animate={calm ? { opacity: 0.4 } : { opacity: [0.28, 0.5, 0.28] }}
-            transition={{ duration: 11, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-            className={cn(
-              "absolute bottom-8 left-0 h-[42vh] w-[42vh] -translate-x-1/3 rounded-full bg-[radial-gradient(circle,rgba(28,60,107,0.38),transparent_70%)]",
-              !calm && "blur-3xl",
-            )}
-          />
-        </motion.div>
-
-        {/* Cinematic film grain — barely-there texture that keeps the dark from
-            reading as flat. The mix-blend compositing is costly on phones, so
-            it's desktop-only; on mobile the dark already reads fine without it. */}
-        {!calm && (
-          <motion.div
-            aria-hidden
-            initial={{ opacity: 0.08 }}
-            animate={{ opacity: [0.06, 0.11, 0.06] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="pointer-events-none absolute inset-0 z-[1] mix-blend-overlay"
-            style={{ backgroundImage: FILM_GRAIN, backgroundSize: "220px 220px" }}
-          />
-        )}
-
         {/* Top-only shading to seat the headline — kept off the bottom edge so
-            it never creates a tonal step at the section boundary. */}
+            it never creates a tonal step at the section boundary. The hero
+            otherwise sits flush on the same code-rain field as every section
+            below it, so there's no brightness step at the boundary. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[1]"
