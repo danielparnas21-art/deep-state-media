@@ -370,6 +370,31 @@ export function ComingSoon({
         </div>
       </section>
 
+      {/* ── What's coming ────────────────────────────────────── */}
+      <section
+        aria-labelledby="coming-heading"
+        className="relative isolate overflow-hidden py-20 text-paper sm:py-24"
+      >
+        <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
+          <div className="mx-auto mb-14 flex max-w-3xl flex-col items-center text-center">
+            <Eyebrow className="mb-5">What&rsquo;s coming</Eyebrow>
+            <h2
+              id="coming-heading"
+              className="display-stencil text-[clamp(2.2rem,5vw,4rem)] leading-[1.02]"
+            >
+              Three fronts.{" "}
+              <span className="accent-signal">One movement.</span>
+            </h2>
+          </div>
+
+          <ul className="divide-y divide-white/5">
+            {FRONTS.map((f, i) => (
+              <FrontRow key={f.index} front={f} index={i} reduce={!!reduce} />
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── Reports — live from Substack ─────────────────────── */}
       <section
         aria-labelledby="reports-heading"
@@ -429,31 +454,6 @@ export function ComingSoon({
               </a>
             </div>
           )}
-        </div>
-      </section>
-
-      {/* ── What's coming ────────────────────────────────────── */}
-      <section
-        aria-labelledby="coming-heading"
-        className="relative isolate overflow-hidden py-20 text-paper sm:py-24"
-      >
-        <div className="relative z-10 mx-auto w-full max-w-[1480px] px-6 sm:px-8 lg:px-12">
-          <div className="mx-auto mb-14 flex max-w-3xl flex-col items-center text-center">
-            <Eyebrow className="mb-5">What&rsquo;s coming</Eyebrow>
-            <h2
-              id="coming-heading"
-              className="display-stencil text-[clamp(2.2rem,5vw,4rem)] leading-[1.02]"
-            >
-              Three fronts.{" "}
-              <span className="accent-signal">One movement.</span>
-            </h2>
-          </div>
-
-          <ul className="divide-y divide-white/5">
-            {FRONTS.map((f, i) => (
-              <FrontRow key={f.index} front={f} index={i} reduce={!!reduce} />
-            ))}
-          </ul>
         </div>
       </section>
 
