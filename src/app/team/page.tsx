@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { ArrowUpRight, ExternalLink, LockOpen } from "lucide-react";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
+import { Declassify } from "@/components/motion/Declassify";
 import { getTeam, initialsOf, type TeamMember } from "@/lib/team";
 import { cn } from "@/lib/cn";
 
@@ -37,8 +38,10 @@ export default function TeamPage() {
             Who we are
           </p>
           <h1 className="display-stencil text-[clamp(2.8rem,8vw,7rem)] leading-[0.98]">
-            Meet the{" "}
-            <span className="accent-signal">team.</span>
+            <Declassify>
+              Meet the{" "}
+              <span className="accent-signal">team.</span>
+            </Declassify>
           </h1>
           <p className="mt-8 max-w-2xl text-deck text-paper/65">
             The founders and central figures building Deep State Media — on the
@@ -83,6 +86,7 @@ export default function TeamPage() {
 
 function MemberRow({ member: m, index }: { member: TeamMember; index: number }) {
   const flip = index % 2 === 1;
+  const fileNo = String(index + 1).padStart(3, "0");
   return (
     <article
       id={m.slug}
@@ -105,16 +109,35 @@ function MemberRow({ member: m, index }: { member: TeamMember; index: number }) 
             <div
               aria-hidden
               className="aspect-[4/5] bg-navy-900 bg-cover bg-center transition-transform duration-700 ease-out group-hover/photo:scale-[1.04]"
-              style={{ backgroundImage: `url(${m.portrait})` }}
+              style={{ backgroundImage: `url("${m.portrait}")` }}
             />
           ) : (
             <PortraitPending initials={initialsOf(m.name)} />
           )}
+          {/* Classified file stamp */}
+          <span className="pointer-events-none absolute left-3 top-3 rounded bg-black/55 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/75 backdrop-blur-sm">
+            File No. {fileNo}
+          </span>
+          {/* HUD corner tick */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 border-b-2 border-r-2 border-signal-500/50"
+          />
         </div>
       </div>
 
-      {/* Bio */}
+      {/* Dossier */}
       <div className={cn("max-w-prose", flip && "lg:order-1 lg:ml-auto")}>
+        {/* File header */}
+        <div className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/40">
+          <span className="whitespace-nowrap text-signal-400">
+            ▸ Dossier {fileNo}
+          </span>
+          <span aria-hidden className="h-px flex-1 bg-white/10" />
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-emerald-400">
+            <LockOpen size={11} /> Clearance granted
+          </span>
+        </div>
         <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-signal-400">
           {m.role}
         </p>
@@ -124,7 +147,7 @@ function MemberRow({ member: m, index }: { member: TeamMember; index: number }) 
           </p>
         )}
         <h2 className="mt-4 display-stencil text-[clamp(2rem,4.5vw,3.6rem)] leading-[0.95] text-paper">
-          {m.name}
+          <Declassify>{m.name}</Declassify>
         </h2>
 
         <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-paper/65">
