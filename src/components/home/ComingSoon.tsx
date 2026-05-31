@@ -86,8 +86,8 @@ const FRONTS = [
   {
     index: "03",
     kicker: "The Next Generation",
-    title: "A better script",
-    body: "Daniel takes the fight to the next generation — going live and building his own show that proves you can be ambitious, successful, and still be a good person. He cuts through the script the elite sell young people online, and exposes how the powerful profit from keeping them distracted.",
+    title: "Question everything",
+    body: "Daniel is building the younger, consciousness-driven side of Deep State Media — going live with his own show, questioning the systems that control the world and the ones that control the mind: politics, culture, masculinity, corruption, conspiracies, success, ego, social media, and reality itself.",
     status: "Going live",
     href: undefined as string | undefined,
   },

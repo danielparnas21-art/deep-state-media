@@ -94,13 +94,13 @@ export const TEAM: TeamMember[] = [
     name: "Daniel Parnas",
     role: "Co-founder",
     bio:
-      "Daniel Parnas is Lev Parnas’s son and a co-founder of Deep State Media. He grew up inside the kind of rooms most reporters only read transcripts of. From a young age he was at his father’s side, sitting in on meetings with oligarchs, sitting members of Congress, donors, defectors, and business operators most of the public will never see in a press release. He has seen every side of it — the people who run things, the people the powerful step on, and the spaces in between most newsrooms never get a look at.\n\nAt Deep State Media he leads social strategy and audience-building, and uses that platform to talk directly to a generation of young men who deserve a better script than the one currently being sold to them online. He’s unapologetically pro-ambition, pro-success, and absolutely uncompromising on the protection of women and children. More than anything, he’s here to put the right message in front of his generation — and to be a voice young people can actually trust.",
+      "Daniel Parnas is Lev Parnas’s son and a co-founder of Deep State Media. He grew up inside the kind of rooms most reporters only read transcripts of. From a young age he was at his father’s side, sitting in on meetings with oligarchs, sitting members of Congress, donors, defectors, and business operators most of the public will never see in a press release. He has seen every side of it — the people who run things, the people the powerful step on, and the spaces in between most newsrooms never get a look at.\n\nAt Deep State Media he’s building the younger, consciousness-driven side of the movement — going live with his own show and speaking directly to a generation that deserves a better script than the one being sold to them online. He questions the systems that control the world and the systems that control the mind: politics, culture, masculinity, corruption, conspiracies, success, ego, social media, and reality itself. Unapologetically pro-ambition and pro-success, uncompromising on the protection of women and children, and — more than anything — a voice young people can actually trust.",
     quote: {
       text: "My generation deserves better than what they’re being sold online. That’s the version I’m putting out there.",
       cite: "Daniel Parnas, on the record · 2026",
     },
     portrait: undefined, // TODO: place file at /public/team/daniel-parnas.jpg and set this string
-    beats: ["Social strategy", "Audience", "Distribution", "Reels · TikTok · X"],
+    beats: ["Culture", "Consciousness", "Masculinity", "Power & control", "Success & ego"],
     links: [{ label: "Email", href: "mailto:daniel@deepstate.media" }],
   },
   {
