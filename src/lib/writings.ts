@@ -143,7 +143,7 @@ async function fetchOgImage(pageUrl: string): Promise<string | undefined> {
   try {
     const res = await fetch(pageUrl, {
       next: { revalidate: 120 },
-      headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstate.media)" },
+      headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstatemedia.co)" },
     });
     if (!res.ok) return undefined;
     const html = await res.text();
@@ -270,7 +270,7 @@ export async function fetchSubstack(
   try {
     const res = await fetch(feedUrl, {
       next: { revalidate: 120 },
-      headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstate.media)" },
+      headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstatemedia.co)" },
     });
     if (!res.ok) return [];
     xml = await res.text();

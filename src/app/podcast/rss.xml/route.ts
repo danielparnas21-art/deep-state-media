@@ -1,12 +1,12 @@
 import { EPISODES } from "@/lib/episodes";
 
-const SITE = "https://deepstate.media";
+const SITE = "https://deepstatemedia.co";
 const SHOW = {
   title: "The Briefing Room — Deep State Media",
   description:
     "Weekly long-form investigative journalism on tape. Lobbyists, lawyers, defectors, donors — we record the call, publish the source list.",
   author: "Deep State Media",
-  email: "podcast@deepstate.media",
+  email: "podcast@deepstatemedia.co",
   language: "en-us",
   category: "News",
   image: `${SITE}/podcast-cover.jpg`,

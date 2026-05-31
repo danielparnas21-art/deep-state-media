@@ -129,7 +129,7 @@ export default function OpengraphImage() {
             color: "#7f8db0",
           }}
         >
-          <div style={{ display: "flex" }}>deepstate.media</div>
+          <div style={{ display: "flex" }}>deepstatemedia.co</div>
           <div style={{ display: "flex" }}>The investigations both parties bury</div>
         </div>
       </div>

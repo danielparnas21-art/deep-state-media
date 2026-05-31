@@ -60,7 +60,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://deepstate.media"),
+  metadataBase: new URL("https://deepstatemedia.co"),
   title: {
     default: "Deep State Media — Investigative journalism without a side",
     template: "%s — Deep State Media",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     title: "Deep State Media",
     description:
       "Independent investigative journalism on the people who actually run things — left, right, and the rooms in between.",
-    url: "https://deepstate.media",
+    url: "https://deepstatemedia.co",
     siteName: "Deep State Media",
     type: "website",
   },

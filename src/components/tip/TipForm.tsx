@@ -54,7 +54,7 @@ export function TipForm() {
         </h3>
         <p className="mt-4 max-w-prose text-ink-600">
           We&rsquo;ve got your tip. We don&rsquo;t auto-reply — if a reporter
-          follows up, it will come from a deepstate.media address. If you
+          follows up, it will come from a deepstatemedia.co address. If you
           submitted without contact info, watch the relevant beat: we publish
           when we can verify.
         </p>

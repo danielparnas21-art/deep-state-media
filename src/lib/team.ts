@@ -101,7 +101,7 @@ export const TEAM: TeamMember[] = [
     },
     portrait: undefined, // TODO: place file at /public/team/daniel-parnas.jpg and set this string
     beats: ["Culture", "Consciousness", "Masculinity", "Power & control", "Success & ego"],
-    links: [{ label: "Email", href: "mailto:daniel@deepstate.media" }],
+    links: [{ label: "Email", href: "mailto:daniel@deepstatemedia.co" }],
   },
   {
     slug: "jonathan-hay",
