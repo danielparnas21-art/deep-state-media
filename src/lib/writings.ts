@@ -123,8 +123,44 @@ function imageWidthFromUrl(url: string): number {
  */
 function allImagesFromHtml(html: string): string[] {
   if (!html) return [];
-  const matches = Array.from(html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi));
-  return matches.map((m) => m[1]).filter((src) => !isPromoImage(src));
+  const urls: string[] = [];
+  for (const [tag] of html.matchAll(/<img\b[^>]*>/gi)) {
+    // Skip Substack's recurring promo embeds (app-install, subscribe, share) —
+    // they're not the post's content and would make a terrible cover.
+    if (/install-substack-app|subscribe|share-button/i.test(tag)) continue;
+    const src = tag.match(/src=["']([^"']+)["']/i)?.[1];
+    if (src && !isPromoImage(src)) urls.push(src);
+  }
+  return urls;
+}
+
+/**
+ * Pull a post's og:image (its real social/preview image — e.g. a video poster)
+ * from the post page. Used as a cover fallback for posts whose RSS body has no
+ * usable image (video/podcast posts). Always resolves; never throws.
+ */
+async function fetchOgImage(pageUrl: string): Promise<string | undefined> {
+  try {
+    const res = await fetch(pageUrl, {
+      next: { revalidate: 120 },
+      headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstate.media)" },
+    });
+    if (!res.ok) return undefined;
+    const html = await res.text();
+    const m =
+      html.match(
+        /<meta[^>]+property=["']og:image["'][^>]*content=["']([^"']+)["']/i,
+      ) ??
+      html.match(
+        /<meta[^>]+content=["']([^"']+)["'][^>]*property=["']og:image["']/i,
+      ) ??
+      html.match(
+        /<meta[^>]+name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i,
+      );
+    return m?.[1];
+  } catch {
+    return undefined;
+  }
 }
 
 /**
@@ -256,6 +292,14 @@ export async function fetchSubstack(
     .filter((w): w is ParsedItem => w !== null);
 
   const items = resolveCoversAcrossFeed(parsedItems);
+
+  // Posts with no usable in-body image (video/podcast posts) — fall back to the
+  // post's og:image (its real preview/poster) fetched from the page.
+  await Promise.all(
+    items.map(async (it) => {
+      if (!it.cover) it.cover = await fetchOgImage(it.link);
+    }),
+  );
 
   return items.sort(
     (a, b) =>
