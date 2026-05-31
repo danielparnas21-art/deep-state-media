@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     "Every dispatch from Deep State Media — published live from our Substack the moment it goes out.",
 };
 
-// Re-pull the feed every 10 minutes so new posts appear without a redeploy.
-export const revalidate = 600;
+// Re-pull the feed every 2 minutes so new posts appear quickly, no redeploy.
+export const revalidate = 120;
 
 export default async function ReportsPage() {
   const reports = await listReports();

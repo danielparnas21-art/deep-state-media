@@ -8,7 +8,7 @@ import { LAUNCHED } from "@/lib/launch";
 import { listWritings } from "@/lib/writings";
 import { listReports, REPORTS_HOME } from "@/lib/reports";
 
-export const revalidate = 600;
+export const revalidate = 120;
 
 export default async function HomePage() {
   // V1: the gate opens onto the coming-soon teaser. The full movement homepage

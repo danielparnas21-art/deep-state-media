@@ -229,7 +229,7 @@ export async function fetchSubstack(
   let xml = "";
   try {
     const res = await fetch(feedUrl, {
-      next: { revalidate: 600 },
+      next: { revalidate: 120 },
       headers: { "User-Agent": "DeepStateMedia/1.0 (+https://deepstate.media)" },
     });
     if (!res.ok) return [];
