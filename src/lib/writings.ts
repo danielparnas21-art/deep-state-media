@@ -208,7 +208,11 @@ function resolveCoversAcrossFeed(parsed: ParsedItem[]): Writing[] {
         (u) => counts.get(canonicalImageKey(u)) === 1,
       );
       cover =
-        unique.find((u) => imageWidthFromUrl(u) >= 600) ?? unique[0];
+        unique.find((u) => imageWidthFromUrl(u) >= 600) ??
+        unique[0] ??
+        // Last resort: any image in the post (e.g. a video/podcast post whose
+        // only image is its poster) beats no cover at all.
+        item._bodyImages[0];
     }
     // Strip the working field before exposing to consumers.
     const { _bodyImages: _omit, ...rest } = item;

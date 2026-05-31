@@ -30,7 +30,7 @@ export function ReportCard({ report }: { report: Report }) {
           <div
             aria-hidden
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-            style={{ backgroundImage: `url(${report.cover})` }}
+            style={{ backgroundImage: `url("${report.cover}")` }}
           />
         ) : (
           <div
