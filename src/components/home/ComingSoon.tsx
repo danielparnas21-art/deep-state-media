@@ -129,7 +129,6 @@ export function ComingSoon({
     offset: ["start start", "end start"],
   });
   const glowY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
-  const ghostY = useTransform(scrollYProgress, [0, 1], ["0%", "-16%"]);
 
   const state = revealed ? "visible" : "hidden";
 
@@ -196,14 +195,6 @@ export function ComingSoon({
               "linear-gradient(to bottom, rgba(2,3,8,0.45) 0%, transparent 32%)",
           }}
         />
-
-        <motion.span
-          aria-hidden
-          style={{ y: calm ? 0 : ghostY }}
-          className="pointer-events-none absolute -right-6 bottom-2 select-none font-display text-[clamp(7rem,20vw,20rem)] font-semibold leading-none tracking-tighter text-white/[0.025]"
-        >
-          DSM
-        </motion.span>
 
         <div className="relative z-10 mx-auto flex w-full max-w-[1480px] flex-col items-center px-6 text-center sm:px-8 lg:px-12">
           <motion.div
