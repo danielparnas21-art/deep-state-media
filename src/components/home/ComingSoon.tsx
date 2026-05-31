@@ -304,12 +304,16 @@ export function ComingSoon({
             </Link>
             <Link
               href="/reports"
-              className="group inline-flex items-center gap-2 rounded-md border border-white/20 px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-paper transition-colors hover:border-white/45"
+              className="group relative inline-flex items-center gap-2.5 rounded-md border border-white/20 bg-white/[0.03] px-7 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-paper transition-all duration-300 hover:border-signal-500/55 hover:bg-white/[0.06] hover:shadow-[0_0_28px_-10px_rgba(200,57,42,0.75)]"
             >
+              <span aria-hidden className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal-500 opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal-500" />
+              </span>
               Reports
               <ArrowUpRight
                 size={15}
-                className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="text-paper/70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
             </Link>
           </motion.div>
